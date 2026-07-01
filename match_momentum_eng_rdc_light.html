@@ -201,7 +201,7 @@ function computeGeometry() {
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(DPR, DPR);
   const padScale = CSS_W / 764;
-  PAD = { l:14*padScale, r:14*padScale, t:36*padScale, b:44*padScale };
+  PAD = { l:8*padScale, r:8*padScale, t:26*padScale, b:32*padScale };
   plotW = CSS_W - PAD.l - PAD.r;
   plotH = CSS_H - PAD.t - PAD.b;
   midY = PAD.t + plotH/2;
