@@ -363,6 +363,14 @@ function render() {
   computeGeometry();
   draw();
   buildGoalHits();
+  reportHeight();
+}
+
+function reportHeight() {
+  const h = Math.ceil(document.getElementById('card').getBoundingClientRect().height);
+  if (window.parent === window) return;
+  window.parent.postMessage({ sentinel: 'amp', type: 'embed-size', height: h }, '*');
+  window.parent.postMessage({ mmResize: true, height: h }, '*');
 }
 
 render();
