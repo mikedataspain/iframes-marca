@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Match Momentum — Costa de Marfil vs Noruega</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #1a0638; font-family: 'Segoe UI', system-ui, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 24px; }
+  #card { background: #260a52; border: 1px solid #3d1070; border-radius: 16px; width: 820px; overflow: hidden; }
+  .card-header { padding: 22px 28px 16px; border-bottom: 1px solid #3d1070; }
+  .match-title { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: #9966cc; margin-bottom: 10px; }
+  .teams-row { display: flex; align-items: center; justify-content: space-between; }
+  .team-block { display: flex; align-items: center; gap: 10px; }
+  .team-block.away { flex-direction: row-reverse; }
+  .team-name { font-size: 20px; font-weight: 700; color: #ffffff; }
+  .team-code { font-size: 11px; color: #9966cc; letter-spacing: 1px; }
+  .scoreline { text-align: center; }
+  .score-main { font-size: 42px; font-weight: 900; color: #ffffff; line-height: 1; letter-spacing: 4px; }
+  .score-ht { font-size: 11px; color: #9966cc; margin-top: 4px; }
+  .chart-wrap { position: relative; padding: 20px 28px 8px; }
+  canvas#chart { width: 100%; display: block; }
+  #tooltip {
+    position: absolute; display: none; background: rgba(26,6,56,0.95);
+    border: 1px solid #9966cc; border-radius: 6px; padding: 6px 10px;
+    font-size: 12px; color: #fff; pointer-events: none; white-space: nowrap;
+    z-index: 10; transform: translateX(-50%);
+  }
+  .team-labels { display: flex; justify-content: space-between; padding: 8px 28px 0; }
+  .team-label { font-size: 11px; color: #9966cc; letter-spacing: 1px; display: flex; align-items: center; gap: 6px; }
+  .label-dot { width: 8px; height: 8px; border-radius: 50%; }
+  .goals-list { padding: 10px 28px 0; display: flex; justify-content: space-between; }
+  .goals-col { width: 48%; }
+  .goals-col.away { text-align: right; }
+  .goal-item { font-size: 12px; color: #ffffff; margin-bottom: 4px; }
+  .goal-item span { color: #9966cc; }
+  .card-footer { padding: 14px 28px; display: flex; justify-content: space-between; border-top: 1px solid #3d1070; margin-top: 16px; }
+  .card-footer span { font-size: 11px; color: #9966cc; }
+</style>
+</head>
+<body>
+<div id="card">
+  <div class="card-header">
+    <div class="match-title">Copa del Mundo 2026 · Dieciseisavos de final · Dallas Stadium</div>
+    <div class="teams-row">
+      <div class="team-block home">
+        <!-- Costa de Marfil: orange | white | green -->
+        <svg width="42" height="28" viewBox="0 0 42 28" style="border-radius:3px;flex-shrink:0">
+          <rect x="0"  y="0" width="14" height="28" fill="#F77F00"/>
+          <rect x="14" y="0" width="14" height="28" fill="#FFFFFF"/>
+          <rect x="28" y="0" width="14" height="28" fill="#009A44"/>
+        </svg>
+        <div>
+          <div class="team-name">Costa de Marfil</div>
+          <div class="team-code">CDM · Local</div>
+        </div>
+      </div>
+      <div class="scoreline">
+        <div class="score-main">1 – 2</div>
+        <div class="score-ht">0 – 1 al descanso</div>
+      </div>
+      <div class="team-block away">
+        <!-- Norway: red with blue+white cross -->
+        <svg width="42" height="28" viewBox="0 0 42 28" style="border-radius:3px;flex-shrink:0">
+          <rect width="42" height="28" fill="#EF2B2D"/>
+          <rect x="12" y="0" width="6" height="28" fill="#FFFFFF"/>
+          <rect x="0"  y="11" width="42" height="6" fill="#FFFFFF"/>
+          <rect x="13" y="0" width="4" height="28" fill="#002868"/>
+          <rect x="0"  y="12" width="42" height="4" fill="#002868"/>
+        </svg>
+        <div style="text-align:right">
+          <div class="team-name">Noruega</div>
+          <div class="team-code">NOR · Visitante</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-wrap">
+    <canvas id="chart"></canvas>
+    <div id="tooltip"></div>
+  </div>
+
+  <div class="team-labels">
+    <div class="team-label">
+      <div class="label-dot" style="background:#ff1493"></div>
+      Costa de Marfil
+    </div>
+    <div class="team-label">
+      Noruega
+      <div class="label-dot" style="background:#00e5ff"></div>
+    </div>
+  </div>
+
+  <div class="goals-list">
+    <div class="goals-col home">
+      <div class="goal-item">⚽ A. Diallo <span>74'</span></div>
+    </div>
+    <div class="goals-col away">
+      <div class="goal-item"><span>39'</span> A. Nusa ⚽</div>
+      <div class="goal-item"><span>86'</span> E. Haaland ⚽</div>
+    </div>
+  </div>
+
+  <div class="card-footer">
+    <span>Datos: Opta Stats Perform</span>
+    <span>Miguel Ángel García</span>
+  </div>
+</div>
+
+<script>
+const HOME = '39d8zamp9tvg3wc51jxc2a1c0';
+const AWAY = 'e1vf7kzswllumuykwezkrbo70';
+const P1_DUR    = 49 * 60;
+const P2_DUR_S  = 52 * 60 + 56;
+const TOTAL_DUR = P1_DUR + P2_DUR_S;
+
+function eventToSec(e) {
+  const base = e.m * 60 + (e.s || 0);
+  return e.p === 1 ? base : P1_DUR + (base - 45 * 60);
+}
+
+const WEIGHTS = { 16:8, 15:4, 13:2, 14:2, 6:2, 49:1.5, 50:-1, 4:0.5 };
+
+const RAW = [{"t":49,"p":1,"m":1,"s":12,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":1,"s":17,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":15,"p":1,"m":2,"s":20,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":3,"s":37,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":3,"s":56,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":1,"m":4,"s":3,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":4,"s":39,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":1,"m":4,"s":39,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":50,"p":1,"m":5,"s":39,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":5,"s":40,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":13,"p":1,"m":7,"s":9,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":7,"s":12,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":7,"s":14,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":7,"s":59,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":7,"s":59,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":9,"s":48,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":10,"s":10,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":10,"s":19,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":10,"s":26,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":10,"s":31,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":10,"s":37,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":10,"s":37,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":49,"p":1,"m":12,"s":32,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":12,"s":42,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":12,"s":48,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":13,"s":48,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":14,"s":33,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":14,"s":33,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":16,"s":29,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":13,"p":1,"m":20,"s":8,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":22,"s":3,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":6,"p":1,"m":22,"s":3,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":4,"p":1,"m":22,"s":45,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":22,"s":45,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":50,"p":1,"m":26,"s":51,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":50,"p":1,"m":26,"s":54,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":13,"p":1,"m":27,"s":49,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":27,"s":52,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":27,"s":52,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":29,"s":25,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":29,"s":39,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":29,"s":39,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":30,"s":15,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":30,"s":15,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":1,"m":32,"s":33,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":32,"s":34,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":1,"m":32,"s":42,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":32,"s":43,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":32,"s":43,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":33,"s":47,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":33,"s":47,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":15,"p":1,"m":34,"s":3,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":1,"m":35,"s":7,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":35,"s":40,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":35,"s":44,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":35,"s":51,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":15,"p":1,"m":36,"s":22,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":1,"m":36,"s":41,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":36,"s":41,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":49,"p":1,"m":37,"s":31,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":15,"p":1,"m":37,"s":50,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":16,"p":1,"m":38,"s":47,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":15,"p":1,"m":41,"s":10,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":6,"p":1,"m":41,"s":11,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":6,"p":1,"m":41,"s":11,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":13,"p":1,"m":41,"s":51,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":42,"s":38,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":43,"s":6,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":1,"m":43,"s":10,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":43,"s":21,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":43,"s":21,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":1,"m":44,"s":6,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":1,"m":44,"s":6,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":49,"p":1,"m":44,"s":40,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":1,"m":45,"s":21,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":45,"s":29,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":1,"m":45,"s":29,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":13,"p":1,"m":46,"s":24,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":47,"s":3,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":47,"s":59,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":1,"m":48,"s":44,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":45,"s":11,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":46,"s":10,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":46,"s":16,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":46,"s":16,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":49,"p":2,"m":46,"s":47,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":47,"s":20,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":2,"m":48,"s":44,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":48,"s":45,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":2,"m":48,"s":45,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":50,"s":17,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":2,"m":50,"s":17,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":49,"p":2,"m":50,"s":51,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":51,"s":17,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":13,"p":2,"m":51,"s":39,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":15,"p":2,"m":54,"s":28,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":54,"s":34,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":55,"s":14,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":15,"p":2,"m":56,"s":13,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":56,"s":42,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":2,"m":56,"s":42,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":6,"p":2,"m":58,"s":17,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":6,"p":2,"m":58,"s":17,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":13,"p":2,"m":58,"s":59,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":60,"s":21,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":60,"s":21,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":49,"p":2,"m":60,"s":50,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":60,"s":56,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":61,"s":10,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":61,"s":25,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":61,"s":53,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":61,"s":54,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":62,"s":27,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":62,"s":27,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":13,"p":2,"m":63,"s":30,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":64,"s":10,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":64,"s":50,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":6,"p":2,"m":64,"s":50,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":15,"p":2,"m":66,"s":1,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":66,"s":2,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":67,"s":5,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":13,"p":2,"m":71,"s":31,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":71,"s":34,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":71,"s":46,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":72,"s":31,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":72,"s":51,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":16,"p":2,"m":73,"s":31,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":77,"s":0,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":77,"s":13,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":79,"s":27,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":2,"m":79,"s":28,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":50,"p":2,"m":79,"s":31,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":79,"s":38,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":50,"p":2,"m":79,"s":55,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":79,"s":58,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":80,"s":5,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":80,"s":10,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":83,"s":6,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":2,"m":83,"s":6,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":16,"p":2,"m":85,"s":22,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":2,"m":87,"s":35,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":2,"m":87,"s":35,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":49,"p":2,"m":89,"s":20,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":13,"p":2,"m":89,"s":47,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":90,"s":34,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":90,"s":52,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":91,"s":1,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":91,"s":15,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":91,"s":44,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":4,"p":2,"m":91,"s":44,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":0},{"t":49,"p":2,"m":93,"s":21,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":49,"p":2,"m":93,"s":26,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":93,"s":48,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":94,"s":19,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":50,"p":2,"m":94,"s":21,"c":"e1vf7kzswllumuykwezkrbo70","o":1},{"t":49,"p":2,"m":94,"s":23,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":94,"s":35,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":4,"p":2,"m":94,"s":35,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":15,"p":2,"m":95,"s":41,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":95,"s":43,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":95,"s":43,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":49,"p":2,"m":96,"s":37,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":97,"s":0,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1},{"t":6,"p":2,"m":97,"s":0,"c":"e1vf7kzswllumuykwezkrbo70","o":0},{"t":13,"p":2,"m":97,"s":36,"c":"39d8zamp9tvg3wc51jxc2a1c0","o":1}];
+
+const GOALS_META = [
+  { sec: 38*60+47,                       min: 39, scorer: 'A. Nusa',    team: AWAY },
+  { sec: P1_DUR + (73*60+31 - 45*60),   min: 74, scorer: 'A. Diallo',  team: HOME },
+  { sec: P1_DUR + (85*60+22 - 45*60),   min: 86, scorer: 'E. Haaland', team: AWAY },
+];
+
+// ── Momentum calc ────────────────────────────────────────────────────────────
+const WINDOW = 3 * 60;
+const STEP   = 10;
+const SLOTS  = Math.ceil(TOTAL_DUR / STEP) + 1;
+
+const scored = RAW.map(e => {
+  let w = WEIGHTS[e.t] || 0;
+  if (e.t === 6  && e.o !== 1) w = 0;
+  if (e.t === 50) w = -w;
+  if (e.t === 4 && e.o === 0) w = -w;
+  return { sec: eventToSec(e), team: e.c, score: w };
+});
+
+const moHome = new Float32Array(SLOTS);
+const moAway = new Float32Array(SLOTS);
+for (let i = 0; i < SLOTS; i++) {
+  const t = i * STEP, t0 = t - WINDOW;
+  let sh = 0, sa = 0;
+  for (const ev of scored) {
+    if (ev.sec >= t0 && ev.sec <= t) {
+      const age = (t - ev.sec) / WINDOW;
+      const w   = ev.score * Math.exp(-2.5 * age);
+      if (ev.team === HOME) sh += w; else sa += w;
+    }
+  }
+  moHome[i] = sh; moAway[i] = sa;
+}
+
+let maxVal = 0;
+for (let i = 0; i < SLOTS; i++) maxVal = Math.max(maxVal, Math.abs(moHome[i]), Math.abs(moAway[i]));
+if (maxVal === 0) maxVal = 1;
+const net = Array.from(moHome).map((h, i) => (h - moAway[i]) / maxVal);
+
+// Lighter smoothing → more aggressive curves
+function smooth(arr, r) {
+  const out = new Array(arr.length);
+  for (let i = 0; i < arr.length; i++) {
+    let sum = 0, wsum = 0;
+    for (let j = Math.max(0, i-r); j <= Math.min(arr.length-1, i+r); j++) {
+      const g = Math.exp(-0.5 * ((i-j)/r) ** 2);
+      sum += arr[j] * g; wsum += g;
+    }
+    out[i] = sum / wsum;
+  }
+  return out;
+}
+const smoothed = smooth(net, 7);
+
+// ── Canvas setup ─────────────────────────────────────────────────────────────
+const canvas = document.getElementById('chart');
+const CSS_W  = 764;  // inner width (820 card - 28*2 padding)
+const CSS_H  = 440;  // taller → more square overall card
+canvas.style.width  = CSS_W + 'px';
+canvas.style.height = CSS_H + 'px';
+canvas.width  = CSS_W * 2;
+canvas.height = CSS_H * 2;
+const ctx = canvas.getContext('2d');
+ctx.scale(2, 2);
+
+const PAD  = { l: 14, r: 14, t: 36, b: 44 };
+const PW   = CSS_W - PAD.l - PAD.r;
+const PH   = CSS_H - PAD.t - PAD.b;
+const midY = PAD.t + PH / 2;
+
+const xOfSec  = s  => PAD.l + (s / TOTAL_DUR) * PW;
+const xOfSlot = i  => xOfSec(i * STEP);
+const yOfNet  = v  => midY - v * (PH / 2) * 0.88;
+
+// ── Half backgrounds ──
+const htX = xOfSec(P1_DUR);
+[[PAD.l, htX - PAD.l], [htX, PAD.l + PW - htX]].forEach(([x, w], idx) => {
+  const g = ctx.createLinearGradient(x, 0, x + w, 0);
+  g.addColorStop(0,   'rgba(50,10,100,0.0)');
+  g.addColorStop(0.5, 'rgba(50,10,100,0.25)');
+  g.addColorStop(1,   'rgba(50,10,100,0.0)');
+  ctx.fillStyle = g; ctx.fillRect(x, PAD.t, w, PH);
+});
+
+// ── Grid lines ──
+ctx.setLineDash([3, 5]);
+ctx.strokeStyle = 'rgba(255,255,255,0.07)';
+ctx.lineWidth   = 1;
+[-0.5, 0.5].forEach(v => {
+  ctx.beginPath();
+  ctx.moveTo(PAD.l, yOfNet(v)); ctx.lineTo(PAD.l + PW, yOfNet(v));
+  ctx.stroke();
+});
+ctx.setLineDash([]);
+
+// ── Centre axis ──
+ctx.strokeStyle = 'rgba(255,255,255,0.18)';
+ctx.lineWidth   = 1;
+ctx.beginPath(); ctx.moveTo(PAD.l, midY); ctx.lineTo(PAD.l + PW, midY); ctx.stroke();
+
+// ── Half-time divider ──
+ctx.setLineDash([4, 4]);
+ctx.strokeStyle = 'rgba(153,102,204,0.6)';
+ctx.lineWidth   = 1;
+ctx.beginPath(); ctx.moveTo(htX, PAD.t - 10); ctx.lineTo(htX, PAD.t + PH + 8); ctx.stroke();
+ctx.setLineDash([]);
+ctx.fillStyle = '#9966cc'; ctx.font = '700 10px Segoe UI'; ctx.textAlign = 'center';
+ctx.fillText('DESCANSO', htX, PAD.t - 2);
+
+// ── Minute labels ──
+[0,15,30,45,60,75,90].forEach(m => {
+  const sec = m <= 45 ? m * 60 : P1_DUR + (m - 45) * 60;
+  if (sec > TOTAL_DUR) return;
+  const x = xOfSec(sec);
+  ctx.strokeStyle = 'rgba(153,102,204,0.3)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(x, PAD.t + PH + 3); ctx.lineTo(x, PAD.t + PH + 8); ctx.stroke();
+  ctx.fillStyle = 'rgba(200,160,255,0.75)'; ctx.font = '9px Segoe UI'; ctx.textAlign = 'center';
+  ctx.fillText(m + "'", x, PAD.t + PH + 20);
+});
+
+// ── HOME fill (positive = above axis) — magenta ──
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(xOfSlot(0), midY);
+for (let i = 0; i < smoothed.length; i++) ctx.lineTo(xOfSlot(i), yOfNet(Math.max(0, smoothed[i])));
+ctx.lineTo(xOfSlot(smoothed.length - 1), midY);
+ctx.closePath();
+const gHome = ctx.createLinearGradient(0, PAD.t, 0, midY);
+gHome.addColorStop(0,   'rgba(255,20,147,0.92)');
+gHome.addColorStop(0.5, 'rgba(255,20,147,0.55)');
+gHome.addColorStop(1,   'rgba(255,20,147,0.04)');
+ctx.fillStyle = gHome; ctx.fill();
+ctx.restore();
+
+// ── AWAY fill (negative = below axis) — cyan ──
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(xOfSlot(0), midY);
+for (let i = 0; i < smoothed.length; i++) ctx.lineTo(xOfSlot(i), yOfNet(Math.min(0, smoothed[i])));
+ctx.lineTo(xOfSlot(smoothed.length - 1), midY);
+ctx.closePath();
+const gAway = ctx.createLinearGradient(0, midY, 0, PAD.t + PH);
+gAway.addColorStop(0,   'rgba(0,229,255,0.04)');
+gAway.addColorStop(0.5, 'rgba(0,229,255,0.55)');
+gAway.addColorStop(1,   'rgba(0,229,255,0.92)');
+ctx.fillStyle = gAway; ctx.fill();
+ctx.restore();
+
+// ── Momentum line ──
+ctx.save();
+ctx.beginPath();
+for (let i = 0; i < smoothed.length; i++) {
+  i === 0 ? ctx.moveTo(xOfSlot(i), yOfNet(smoothed[i])) : ctx.lineTo(xOfSlot(i), yOfNet(smoothed[i]));
+}
+ctx.strokeStyle = 'rgba(255,255,255,0.55)';
+ctx.lineWidth   = 1.5;
+ctx.lineJoin    = 'round';
+ctx.stroke();
+ctx.restore();
+
+// ── Goal markers: vertical line + pill at top ──
+const goalHitAreas = [];
+GOALS_META.forEach(g => {
+  const x      = xOfSec(g.sec);
+  const isHome = g.team === HOME;
+  const color  = isHome ? '#ff1493' : '#00e5ff';
+  const label  = '⚽ ' + g.min + "'";
+
+  // Vertical line
+  ctx.save();
+  ctx.strokeStyle = color; ctx.lineWidth = 1.5; ctx.globalAlpha = 0.9;
+  ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(x, PAD.t + 22); ctx.lineTo(x, PAD.t + PH); ctx.stroke();
+  ctx.restore();
+
+  // Pill at top
+  ctx.save();
+  ctx.font = '700 10px Segoe UI';
+  const tw   = ctx.measureText(label).width;
+  const pw   = tw + 10;
+  const ph   = 17;
+  const px   = Math.min(Math.max(x - pw / 2, PAD.l), PAD.l + PW - pw);
+  const py   = PAD.t + 2;
+
+  // Pill background
+  ctx.fillStyle = 'rgba(26,6,56,0.88)';
+  ctx.beginPath(); ctx.roundRect(px, py, pw, ph, 4); ctx.fill();
+  // Pill border
+  ctx.strokeStyle = color; ctx.lineWidth = 1; ctx.globalAlpha = 1;
+  ctx.stroke();
+  // Text
+  ctx.fillStyle = '#ffffff'; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+  ctx.fillText(label, px + 5, py + ph / 2);
+  ctx.restore();
+
+  goalHitAreas.push({ x, min: g.min, scorer: g.scorer, isHome, color });
+});
+
+// ── Border ──
+ctx.strokeStyle = 'rgba(153,102,204,0.18)'; ctx.lineWidth = 1;
+ctx.strokeRect(PAD.l, PAD.t, PW, PH);
+
+// ── Tooltip interaction ──
+const tooltip = document.getElementById('tooltip');
+const wrap    = canvas.parentElement;
+
+canvas.addEventListener('mousemove', ev => {
+  const rect  = canvas.getBoundingClientRect();
+  const mx    = (ev.clientX - rect.left) * (CSS_W / rect.width);
+  const my    = (ev.clientY - rect.top)  * (CSS_H / rect.height);
+
+  let hit = null;
+  for (const g of goalHitAreas) {
+    if (Math.abs(mx - g.x) < 14) { hit = g; break; }
+  }
+  if (hit) {
+    const teamName = hit.isHome ? 'Costa de Marfil' : 'Noruega';
+    tooltip.innerHTML = `<span style="color:${hit.color};font-weight:700">⚽ ${hit.min}' — ${hit.scorer}</span><br><span style="color:#9966cc;font-size:10px">${teamName}</span>`;
+    tooltip.style.display = 'block';
+    const cx = canvas.getBoundingClientRect().left - wrap.getBoundingClientRect().left + hit.x * (rect.width / CSS_W);
+    tooltip.style.left = cx + 'px';
+    tooltip.style.top  = (PAD.t * (rect.height / CSS_H) - 52) + 'px';
+    canvas.style.cursor = 'crosshair';
+  } else {
+    tooltip.style.display = 'none';
+    canvas.style.cursor = 'default';
+  }
+});
+canvas.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
+</script>
+</body>
+</html>
