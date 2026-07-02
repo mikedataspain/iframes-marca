@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Secuencia Gol 3 · Argelia · Copa del Mundo 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%}
+body{background:#260a52;
+     font-family:'Inter','Segoe UI',system-ui,sans-serif}
+
+#card-alg{
+  background:#260a52;border:1.5px solid #3d1070;border-radius:12px;
+  width:100%;max-width:720px;margin:0 auto;overflow:hidden;position:relative;box-sizing:border-box
+}
+
+/* HEADER */
+.card-header{display:flex;justify-content:space-between;align-items:center;
+  padding:16px 22px 14px;border-bottom:1px solid #3d1070}
+.hdr-left{display:flex;align-items:center;gap:clamp(6px,2.4vw,12px);min-width:0}
+.flag-wrap{width:clamp(28px,7vw,44px);height:auto;aspect-ratio:44/30;overflow:hidden;border-radius:3px;
+  box-shadow:0 1px 6px rgba(0,0,0,.5);flex-shrink:0;background:#1a0535}
+.flag-wrap img{width:100%;height:100%;object-fit:cover}
+.team-name{font-size:clamp(13px,3.8vw,22px);font-weight:800;color:#00e5ff;letter-spacing:.3px;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-sub{font-size:clamp(9px,2vw,11px);color:#9966cc;margin-top:3px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-right{text-align:right;min-width:0}
+.comp-name{font-size:clamp(9px,2vw,12px);font-weight:700;color:#fff;letter-spacing:.2px}
+.match-info{font-size:clamp(9px,2vw,11px);color:#9966cc;margin-top:3px}
+
+/* STATS ROW 1 */
+.stats-r1{display:grid;grid-template-columns:1fr 1fr 1fr 1.5fr 1.5fr;
+  border-bottom:1px solid #3d1070}
+.stat-cell{padding:14px 6px 11px;text-align:center;
+  border-right:1px solid #3d1070}
+.stat-cell:last-child{border-right:none}
+.sv{font-size:clamp(14px,3.8vw,23px);font-weight:800;color:#fff;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sv.accent{color:#00e5ff}
+.sv.assist-col{color:#ffdd00}
+.sv.goal-col{color:#4ae89a}
+.sv.sm{font-size:clamp(10px,2.4vw,14px)}
+.sl{font-size:clamp(7px,1.6vw,9px);font-weight:700;color:#9966cc;text-transform:uppercase;
+  letter-spacing:1px;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* STATS ROW 2 */
+.stats-r2{display:grid;grid-template-columns:1fr 1fr 1fr;
+  border-bottom:1px solid #3d1070;background:rgba(74,232,154,.06)}
+
+/* PITCH */
+.pitch-wrap{padding:14px 18px 12px;background:#1e0840}
+#pitchCanvas{display:block;width:100%;border-radius:4px}
+
+/* LEGEND */
+.legend{display:flex;align-items:center;gap:22px;padding:10px 22px;
+  border-top:1px solid #3d1070;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:7px;
+  font-size:11px;color:#cccccc;font-weight:500}
+
+/* FOOTER */
+.card-footer{display:flex;justify-content:space-between;padding:8px 22px;
+  border-top:1px solid #3d1070;font-size:10px;color:#aaaaaa}
+
+/* TOOLTIP */
+#tt{position:fixed;display:none;background:rgba(10,2,30,.92);border:1px solid #3d1070;
+  border-radius:6px;padding:6px 10px;font-size:11px;color:#fff;pointer-events:none;
+  z-index:999;white-space:nowrap;box-shadow:0 2px 12px rgba(0,0,0,.5)}
+#tt .tn{font-weight:700;color:#00e5ff;margin-bottom:2px}
+#tt .tn.assist{color:#ffdd00}
+#tt .tr{color:#9966cc;font-size:10px}
+</style>
+</head>
+<body>
+<div id="card-alg">
+
+<!-- HEADER -->
+<div class="card-header">
+  <div class="hdr-left">
+    <div class="flag-wrap">
+      <img id="flagImg" src="https://flagcdn.com/h40/dz.png" alt="DZ">
+    </div>
+    <div>
+      <div class="team-name">Argelia</div>
+      <div class="team-sub">Secuencia de gol — Gol 3 · min 90+3'</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="comp-name">Copa del Mundo 2026 · Grupo J</div>
+    <div class="match-info">vs Austria · 28 jun 2026</div>
+  </div>
+</div>
+
+<!-- STATS ROW 1 -->
+<div class="stats-r1">
+  <div class="stat-cell">
+    <div class="sv accent">5:36</div>
+    <div class="sl">Duración</div>
+  </div>
+  <div class="stat-cell">
+    <div class="sv">9</div>
+    <div class="sl">Jugadores</div>
+  </div>
+  <div class="stat-cell">
+    <div class="sv">110</div>
+    <div class="sl">Pases</div>
+  </div>
+  <div class="stat-cell">
+    <div class="sv assist-col sm">H. Aouar</div>
+    <div class="sl">Asistente</div>
+  </div>
+  <div class="stat-cell">
+    <div class="sv goal-col sm">R. Mahrez</div>
+    <div class="sl">Finalizador</div>
+  </div>
+</div>
+
+<!-- STATS ROW 2 -->
+<div class="stats-r2">
+  <div class="stat-cell">
+    <div class="sv goal-col">Derecha</div>
+    <div class="sl">Pierna</div>
+  </div>
+  <div class="stat-cell">
+    <div class="sv goal-col">12,0 m</div>
+    <div class="sl">Distancia</div>
+  </div>
+  <div class="stat-cell">
+    <div class="sv goal-col" style="font-size:13px">Bajo izquierda</div>
+    <div class="sl">Destino portería</div>
+  </div>
+</div>
+
+<!-- PITCH -->
+<div class="pitch-wrap">
+  <canvas id="pitchCanvas" width="1368" height="886"></canvas>
+</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="leg-item">
+    <svg width="26" height="10" viewBox="0 0 26 10">
+      <line x1="1" y1="5" x2="20" y2="5" stroke="#00e5ff" stroke-width="1.5"/>
+      <polygon points="16,2 22,5 16,8" fill="#00e5ff"/>
+    </svg>
+    Pase
+  </div>
+  <div class="leg-item">
+    <svg width="26" height="10" viewBox="0 0 26 10">
+      <line x1="1" y1="5" x2="20" y2="5" stroke="#ffdd00" stroke-width="2"/>
+      <polygon points="16,2 22,5 16,8" fill="#ffdd00"/>
+    </svg>
+    Asistencia
+  </div>
+  <div class="leg-item">
+    <svg width="14" height="14" viewBox="0 0 14 14">
+      <circle cx="7" cy="7" r="5.5" fill="rgba(74,232,154,.22)" stroke="#4ae89a" stroke-width="1.5"/>
+    </svg>
+    Gol
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="card-footer">
+  <span>Datos: Opta Stats Perform</span>
+  <span>Miguel Ángel García</span>
+</div>
+</div>
+
+<div id="tt"><div class="tn" id="tt-n"></div><div class="tr" id="tt-r"></div></div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────
+// [x, y, ex, ey, player_abbrev, is_assist]
+const SEQ=[
+[51.1,0.0,35.7,32.1,"S. Chergui",false],
+[38.7,34.2,45.3,55.9,"Z. Belaïd",false],
+[46.5,60.3,59.8,98.4,"R. Bensebaini",false],
+[57.7,92.8,59.7,85.0,"R. Aït-Nouri",false],
+[61.9,86.4,59.9,94.7,"H. Aouar",false],
+[55.8,90.6,45.7,73.9,"R. Aït-Nouri",false],
+[45.7,70.2,47.7,44.1,"R. Bensebaini",false],
+[48.3,42.9,52.8,26.8,"S. Chergui",false],
+[53.2,25.2,65.4,2.2,"A. Mandi",false],
+[63.7,4.0,56.9,31.5,"R. Mahrez",false],
+[61.3,32.7,54.3,51.4,"F. Chaïbi",false],
+[55.7,46.9,47.4,42.7,"N. Bentaleb",false],
+[47.1,44.2,51.3,79.8,"Z. Belaïd",false],
+[51.3,79.8,55.5,71.5,"R. Bensebaini",false],
+[55.5,71.5,43.8,73.9,"H. Aouar",false],
+[46.3,75.6,46.6,34.0,"R. Bensebaini",false],
+[46.5,32.7,53.9,12.6,"A. Mandi",false],
+[55.0,12.4,48.3,31.2,"S. Chergui",false],
+[52.8,29.7,53.4,47.9,"A. Mandi",false],
+[55.4,52.9,50.2,79.0,"N. Bentaleb",false],
+[50.2,79.0,59.5,92.4,"R. Bensebaini",false],
+[59.5,92.4,47.6,79.3,"R. Aït-Nouri",false],
+[49.0,77.2,51.4,47.7,"R. Bensebaini",false],
+[55.4,44.8,49.8,79.3,"F. Chaïbi",false],
+[59.5,81.6,66.6,96.9,"R. Bensebaini",false],
+[66.6,96.9,57.2,85.6,"R. Aït-Nouri",false],
+[56.9,84.7,49.5,63.1,"R. Bensebaini",false],
+[52.4,61.6,53.6,31.0,"N. Bentaleb",false],
+[59.9,30.1,60.0,77.4,"A. Mandi",false],
+[62.5,78.6,74.1,95.1,"R. Bensebaini",false],
+[76.7,95.2,65.7,82.9,"R. Aït-Nouri",false],
+[65.7,82.9,56.8,75.4,"R. Bensebaini",false],
+[45.9,68.2,43.6,44.7,"N. Bentaleb",false],
+[43.6,44.7,46.8,22.3,"Z. Belaïd",false],
+[55.8,17.2,54.9,46.9,"A. Mandi",false],
+[54.9,49.8,52.0,76.2,"N. Bentaleb",false],
+[54.7,77.4,66.1,96.6,"R. Bensebaini",false],
+[67.6,95.8,54.6,81.9,"R. Aït-Nouri",false],
+[54.3,80.8,50.4,40.3,"R. Bensebaini",false],
+[52.3,39.1,53.7,26.4,"Z. Belaïd",false],
+[58.6,31.9,59.1,51.7,"A. Mandi",false],
+[62.7,59.8,59.7,74.4,"N. Bentaleb",false],
+[60.0,74.4,45.5,47.2,"R. Bensebaini",false],
+[46.1,43.8,55.1,29.4,"Z. Belaïd",false],
+[54.7,27.3,65.9,4.5,"A. Mandi",false],
+[68.3,4.5,53.6,6.1,"R. Mahrez",false],
+[53.6,6.1,51.4,24.4,"S. Chergui",false],
+[52.9,30.1,55.9,16.8,"A. Mandi",false],
+[55.9,16.8,53.2,30.0,"S. Chergui",false],
+[53.5,32.2,48.1,83.2,"A. Mandi",false],
+[51.6,82.8,64.5,95.4,"R. Bensebaini",false],
+[64.5,95.4,47.7,84.3,"R. Aït-Nouri",false],
+[47.4,66.9,53.3,27.6,"R. Bensebaini",false],
+[53.8,19.6,75.0,3.4,"A. Mandi",false],
+[81.8,2.4,67.3,7.0,"R. Mahrez",false],
+[67.1,11.4,59.9,43.6,"S. Chergui",false],
+[62.0,45.6,57.6,77.1,"N. Bentaleb",false],
+[57.6,77.1,69.0,95.4,"R. Bensebaini",false],
+[70.1,94.8,54.6,84.1,"R. Aït-Nouri",false],
+[53.2,78.0,51.2,54.3,"R. Bensebaini",false],
+[51.2,54.3,54.5,31.9,"Z. Belaïd",false],
+[54.5,31.2,59.8,30.7,"A. Mandi",false],
+[59.8,30.7,54.6,33.6,"F. Chaïbi",false],
+[54.6,33.6,57.9,18.7,"A. Mandi",false],
+[58.2,16.6,53.9,29.5,"S. Chergui",false],
+[57.5,32.7,84.6,94.5,"A. Mandi",false],
+[78.3,94.6,61.0,84.6,"R. Aït-Nouri",false],
+[53.9,80.1,52.6,53.5,"R. Bensebaini",false],
+[50.7,51.6,53.8,30.4,"Z. Belaïd",false],
+[53.8,30.4,55.9,55.8,"A. Mandi",false],
+[56.1,55.9,50.8,74.8,"N. Bentaleb",false],
+[51.5,77.2,65.6,94.3,"R. Bensebaini",false],
+[65.4,95.4,50.6,82.5,"R. Aït-Nouri",false],
+[49.1,75.3,45.2,47.8,"R. Bensebaini",false],
+[51.4,45.3,67.4,42.3,"Z. Belaïd",false],
+[67.4,42.3,53.7,22.9,"F. Chaïbi",false],
+[53.7,22.9,54.0,33.7,"A. Mandi",false],
+[54.0,33.7,55.1,60.0,"R. Mahrez",false],
+[53.9,51.7,56.7,36.1,"N. Bentaleb",false],
+[60.0,35.7,55.8,52.5,"R. Mahrez",false],
+[56.1,54.4,55.3,33.4,"N. Bentaleb",false],
+[59.1,30.9,53.2,52.9,"A. Mandi",false],
+[53.1,57.0,56.4,30.1,"N. Bentaleb",false],
+[60.0,28.2,56.3,50.2,"A. Mandi",false],
+[55.3,56.5,56.5,85.2,"N. Bentaleb",false],
+[59.4,81.6,54.5,67.8,"R. Bensebaini",false],
+[54.5,67.8,59.6,43.8,"N. Bentaleb",false],
+[59.6,43.8,53.6,59.8,"R. Mahrez",false],
+[53.6,59.8,46.4,43.3,"N. Bentaleb",false],
+[46.4,43.3,53.4,56.4,"Z. Belaïd",false],
+[53.4,56.4,54.2,32.2,"N. Bentaleb",false],
+[54.5,32.4,51.4,58.3,"A. Mandi",false],
+[52.7,55.8,51.6,49.0,"N. Bentaleb",false],
+[51.6,49.0,51.8,58.5,"Z. Belaïd",false],
+[51.8,58.5,49.3,46.6,"N. Bentaleb",false],
+[48.4,47.9,49.1,57.5,"Z. Belaïd",false],
+[54.1,63.7,56.3,35.2,"N. Bentaleb",false],
+[60.5,31.9,59.1,60.0,"A. Mandi",false],
+[59.1,60.0,47.9,49.6,"N. Bentaleb",false],
+[52.7,48.7,55.4,57.0,"Z. Belaïd",false],
+[55.4,57.0,55.6,32.7,"N. Bentaleb",false],
+[59.4,32.2,59.2,45.9,"A. Mandi",false],
+[57.0,47.4,59.8,75.0,"N. Bentaleb",false],
+[58.7,78.1,68.3,93.9,"R. Bensebaini",false],
+[68.7,93.7,58.7,82.3,"R. Aït-Nouri",false],
+[58.7,82.3,64.1,93.9,"R. Bensebaini",false],
+[64.5,94.8,55.4,81.3,"R. Aït-Nouri",false],
+[53.6,80.1,52.3,46.6,"R. Bensebaini",false],
+[62.9,31.8,79.0,30.4,"F. Chaïbi",false],
+[77.6,32.4,91.3,38.5,"H. Aouar",true]  // ASSIST #110
+];
+
+const GOAL={x:91.3,y:38.5,tx:102.5,ty:44.0};
+const TCOL='#00e5ff', ACOL='#ffdd00', GCOL='#4ae89a';
+
+// ── CANVAS SETUP ──
+const C=document.getElementById('pitchCanvas');
+const ctx=C.getContext('2d');
+const pitchWrap=document.querySelector('.pitch-wrap');
+const ASPECT=443/684;
+const DPR=2;
+
+let CW,CH,pad,PW,PH;
+
+function computeGeometry(){
+  CW=pitchWrap.clientWidth - 18 - 18; // pitch-wrap left/right padding
+  CH=Math.round(CW*ASPECT);
+  C.style.width=CW+'px';
+  C.style.height=CH+'px';
+  C.width=CW*DPR;
+  C.height=CH*DPR;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(DPR,DPR);
+  const s=CW/684;
+  pad={l:16*s,r:16*s,t:10*s,b:10*s};
+  PW=CW-pad.l-pad.r;
+  PH=CH-pad.t-pad.b;
+}
+
+function FX(ox){return pad.l+(ox/100)*PW}
+function FY(oy){return pad.t+((100-oy)/100)*PH}
+
+// ── PITCH ──────────────────────────────────────────────────────────────────
+function drawPitch(){
+  // Background gradient
+  const g=ctx.createLinearGradient(pad.l,pad.t,pad.l+PW,pad.t+PH);
+  g.addColorStop(0,'#1a0638');g.addColorStop(.5,'#22084a');g.addColorStop(1,'#1a0638');
+  ctx.fillStyle=g;
+  ctx.beginPath();ctx.roundRect(pad.l,pad.t,PW,PH,3);ctx.fill();
+
+  // Vertical stripes
+  const ns=10,sw=PW/ns;
+  ctx.fillStyle='rgba(255,255,255,.022)';
+  for(let i=0;i<ns;i+=2)ctx.fillRect(pad.l+i*sw,pad.t,sw,PH);
+
+  ctx.lineWidth=0.8;
+  ctx.strokeStyle='rgba(255,255,255,.18)';
+
+  // Outer boundary
+  ctx.strokeRect(pad.l,pad.t,PW,PH);
+
+  // Halfway line
+  ctx.beginPath();ctx.moveTo(FX(50),pad.t);ctx.lineTo(FX(50),pad.t+PH);ctx.stroke();
+
+  // Centre circle
+  const ccR=Math.max(1,(9.15/105)*PW);
+  ctx.beginPath();ctx.arc(FX(50),FY(50),ccR,0,Math.PI*2);ctx.stroke();
+
+  // Centre dot
+  ctx.fillStyle='rgba(255,255,255,.45)';
+  ctx.beginPath();ctx.arc(FX(50),FY(50),1.5,0,Math.PI*2);ctx.fill();
+
+  // Penalty areas
+  ctx.strokeRect(pad.l,FY(78.9),FX(16.5)-pad.l,FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(83.5),FY(78.9),pad.l+PW-FX(83.5),FY(21.1)-FY(78.9));
+
+  // Six-yard boxes
+  ctx.strokeRect(pad.l,FY(63.2),FX(5.5)-pad.l,FY(36.8)-FY(63.2));
+  ctx.strokeRect(FX(94.5),FY(63.2),pad.l+PW-FX(94.5),FY(36.8)-FY(63.2));
+
+  // Penalty arcs
+  const aR=Math.max(1,(9.15/68)*PH);
+  ctx.save();ctx.beginPath();ctx.rect(FX(16.5),pad.t,PW,PH);ctx.clip();
+  ctx.beginPath();ctx.arc(FX(11),FY(50),aR,0,Math.PI*2);ctx.stroke();ctx.restore();
+  ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,FX(83.5)-pad.l,PH);ctx.clip();
+  ctx.beginPath();ctx.arc(FX(89),FY(50),aR,0,Math.PI*2);ctx.stroke();ctx.restore();
+
+  // Penalty spots
+  ctx.fillStyle='rgba(255,255,255,.45)';
+  [[11,50],[89,50]].forEach(([px,py])=>{
+    ctx.beginPath();ctx.arc(FX(px),FY(py),1.5,0,Math.PI*2);ctx.fill()});
+
+  // Goals (stronger lines)
+  ctx.strokeStyle='rgba(255,255,255,.45)';ctx.lineWidth=2;
+  const gy1=FY(54.8),gy2=FY(45.2),gh=gy2-gy1;
+  // Left goal
+  ctx.beginPath();
+  ctx.moveTo(pad.l,gy1);ctx.lineTo(pad.l-7,gy1);ctx.lineTo(pad.l-7,gy2);ctx.lineTo(pad.l,gy2);
+  ctx.stroke();
+  // Right goal (highlighted — ball goes here)
+  ctx.strokeStyle='rgba(255,255,255,.55)';ctx.lineWidth=2.5;
+  ctx.beginPath();
+  ctx.moveTo(FX(100),gy1);ctx.lineTo(FX(100)+8,gy1);ctx.lineTo(FX(100)+8,gy2);ctx.lineTo(FX(100),gy2);
+  ctx.stroke();
+}
+
+// ── ARROW ───────────────────────────────────────────────────────────────────
+function drawArrow(x1,y1,x2,y2,col,lw,alpha){
+  const dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
+  if(len<1.5)return;
+  const ux=dx/len,uy=dy/len;
+  const aL=Math.max(4,lw*3.5),aW=Math.max(2,lw*2);
+  ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle=col;ctx.fillStyle=col;
+  ctx.lineWidth=lw;ctx.lineCap='round';
+  ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2-ux*aL*.7,y2-uy*aL*.7);ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-ux*aL-uy*aW,y2-uy*aL+ux*aW);
+  ctx.lineTo(x2-ux*aL+uy*aW,y2-uy*aL-ux*aW);
+  ctx.closePath();ctx.fill();
+  ctx.restore();
+}
+
+// ── SEQUENCE ────────────────────────────────────────────────────────────────
+// Store node screen positions for tooltip
+let nodes=[];
+
+function drawSequence(){
+  nodes=[];
+  // Pass 1: draw all arrows (bottom layer)
+  for(let i=0;i<SEQ.length;i++){
+    const [x,y,ex,ey,pl,ia]=SEQ[i];
+    const col=ia?ACOL:TCOL;
+    const lw=ia?2.2:1.0;
+    // Earlier passes slightly more transparent (the "cloud")
+    const alpha=ia?0.92:(i<54?0.38:0.48);
+    drawArrow(FX(x),FY(y),FX(ex),FY(ey),col,lw,alpha);
+  }
+  // Goal arrow
+  drawArrow(FX(GOAL.x),FY(GOAL.y),FX(GOAL.tx),FY(GOAL.ty),GCOL,2.8,1.0);
+
+  // Pass 2: draw all nodes (middle layer)
+  for(let i=0;i<SEQ.length;i++){
+    const [x,y,ex,ey,pl,ia]=SEQ[i];
+    const cx=FX(x),cy=FY(y);
+    const num=i+1;
+    nodes.push({cx,cy,num,pl,ia});
+
+    if(ia){
+      // ASSIST node: glow + yellow circle
+      ctx.save();
+      const gl=ctx.createRadialGradient(cx,cy,0,cx,cy,16);
+      gl.addColorStop(0,'rgba(255,221,0,.35)');gl.addColorStop(1,'rgba(255,221,0,0)');
+      ctx.fillStyle=gl;ctx.beginPath();ctx.arc(cx,cy,16,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.fillStyle=ACOL;
+      ctx.beginPath();ctx.arc(cx,cy,7.5,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#111';ctx.font='bold 7px Inter,sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(String(num),cx,cy+.5);
+      ctx.restore();
+    } else {
+      const r=5;
+      const alpha=i<54?0.68:0.78;
+      ctx.save();ctx.globalAlpha=alpha;
+      ctx.fillStyle=TCOL;
+      ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=1;ctx.fillStyle='#002a33';
+      ctx.font='bold 5.5px Inter,sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.fillText(String(num),cx,cy+.4);
+      ctx.restore();
+    }
+  }
+
+  // Goal node (top layer)
+  const gx=FX(GOAL.x),gy=FY(GOAL.y);
+  nodes.push({cx:gx,cy:gy,num:null,pl:'R. Mahrez',ia:false,isGoal:true});
+  ctx.save();
+  // Outer glow
+  const gg=ctx.createRadialGradient(gx,gy,0,gx,gy,22);
+  gg.addColorStop(0,'rgba(74,232,154,.4)');gg.addColorStop(1,'rgba(74,232,154,0)');
+  ctx.fillStyle=gg;ctx.beginPath();ctx.arc(gx,gy,22,0,Math.PI*2);ctx.fill();
+  // Outer ring
+  ctx.strokeStyle=GCOL;ctx.lineWidth=1.5;ctx.globalAlpha=.5;
+  ctx.beginPath();ctx.arc(gx,gy,13,0,Math.PI*2);ctx.stroke();
+  // Inner fill
+  ctx.globalAlpha=1;
+  ctx.fillStyle='rgba(74,232,154,.22)';
+  ctx.beginPath();ctx.arc(gx,gy,10,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle=GCOL;ctx.lineWidth=2.5;
+  ctx.beginPath();ctx.arc(gx,gy,10,0,Math.PI*2);ctx.stroke();
+  // Draw ball icon as circles (avoid emoji rendering issues)
+  ctx.fillStyle='#fff';ctx.globalAlpha=.9;
+  ctx.beginPath();ctx.arc(gx,gy,4,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#111';ctx.globalAlpha=1;
+  // Pentagon pattern (simplified soccer ball)
+  ctx.beginPath();ctx.arc(gx,gy,2,0,Math.PI*2);ctx.fill();
+  ctx.restore();
+}
+
+// ── RENDER ──────────────────────────────────────────────────────────────────
+function render(){
+  computeGeometry();
+  drawPitch();
+  drawSequence();
+  reportHeight();
+}
+
+function reportHeight(){
+  const h=Math.ceil(document.getElementById('card-alg').getBoundingClientRect().height);
+  if(window.parent===window) return;
+  window.parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
+  window.parent.postMessage({mmResize:true,height:h},'*');
+}
+
+render();
+
+let resizeTimer;
+window.addEventListener('resize',()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(render,120);
+});
+
+// ── TOOLTIP ─────────────────────────────────────────────────────────────────
+const tt=document.getElementById('tt');
+const ttn=document.getElementById('tt-n');
+const ttr=document.getElementById('tt-r');
+const canvas_el=document.getElementById('pitchCanvas');
+const CARD=document.getElementById('card-alg');
+
+function findNearestNode(clientX,clientY){
+  const rect=canvas_el.getBoundingClientRect();
+  const sx=(clientX-rect.left)*(CW/rect.width);
+  const sy=(clientY-rect.top)*(CH/rect.height);
+  let best=null,bestD=Infinity;
+  for(const n of nodes){
+    const d=Math.sqrt((n.cx-sx)**2+(n.cy-sy)**2);
+    if(d<bestD){bestD=d;best=n}
+  }
+  return {best,bestD};
+}
+
+function showNodeTooltip(best,clientX,clientY){
+  ttn.className='tn'+(best.ia?' assist':'');
+  if(best.isGoal){
+    ttn.textContent='⚽ GOL — '+best.pl;
+    ttr.textContent='min 92:51 · Copa del Mundo 2026';
+  } else {
+    ttn.textContent=(best.ia?'★ Asistencia — ':'Pase #'+best.num+' — ')+best.pl;
+    ttr.textContent='';
+  }
+  tt.style.display='block';
+  tt.style.left=(clientX+14)+'px';
+  tt.style.top=(clientY-20)+'px';
+}
+
+canvas_el.addEventListener('mousemove',e=>{
+  const {best,bestD}=findNearestNode(e.clientX,e.clientY);
+  if(best&&bestD<14){
+    showNodeTooltip(best,e.clientX,e.clientY);
+  } else {
+    tt.style.display='none';
+  }
+});
+canvas_el.addEventListener('mouseleave',()=>{tt.style.display='none'});
+
+canvas_el.addEventListener('touchstart',e=>{
+  e.preventDefault();
+  e.stopPropagation();
+  const touch=e.touches[0];
+  const {best,bestD}=findNearestNode(touch.clientX,touch.clientY);
+  if(best&&bestD<20){
+    if(tt.style.display==='block'){ tt.style.display='none'; }
+    else { showNodeTooltip(best,touch.clientX,touch.clientY); }
+  } else {
+    tt.style.display='none';
+  }
+},{passive:false});
+
+document.addEventListener('touchstart',e=>{
+  if(e.target!==canvas_el) tt.style.display='none';
+});
+</script>
+</body>
+</html>
