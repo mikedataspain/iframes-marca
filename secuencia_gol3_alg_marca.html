@@ -522,8 +522,12 @@ function showNodeTooltip(best,clientX,clientY){
     ttr.textContent='';
   }
   tt.style.display='block';
-  tt.style.left=(clientX+14)+'px';
-  tt.style.top=(clientY-20)+'px';
+  tt.style.left='0px';
+  tt.style.top='0px';
+  const tw=tt.offsetWidth, th=tt.offsetHeight;
+  const maxLeft=window.innerWidth-tw-6, maxTop=window.innerHeight-th-6;
+  tt.style.left=Math.max(6,Math.min(clientX+14,maxLeft))+'px';
+  tt.style.top=Math.max(6,Math.min(clientY-20,maxTop))+'px';
 }
 
 canvas_el.addEventListener('mousemove',e=>{

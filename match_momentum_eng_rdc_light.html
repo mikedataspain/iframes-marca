@@ -341,9 +341,12 @@ function buildGoalHits() {
     wrap.appendChild(hit);
     const showTooltip = () => {
       tooltip.innerHTML = '<span class="scorer">' + g.scorer + '</span><br>' + (g.team==='home' ? 'Inglaterra' : 'RD Congo') + " · " + g.min + "'" + (g.assist ? ('<br><span style=\"opacity:.7\">Asist.: ' + g.assist + '</span>') : '');
-      tooltip.style.left = (x - 70) + 'px';
+      tooltip.style.left = '0px';
       tooltip.style.top = (PAD.t + 30) + 'px';
       tooltip.style.opacity = 1;
+      const tw = tooltip.offsetWidth;
+      const maxLeft = wrap.clientWidth - tw - 4;
+      tooltip.style.left = Math.max(4, Math.min(x - 70, maxLeft)) + 'px';
     };
     const hideTooltip = () => { tooltip.style.opacity = 0; };
     hit.addEventListener('mouseenter', showTooltip);
