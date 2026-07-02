@@ -47,24 +47,15 @@
     font-weight:800;
   }
   .header { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; gap:6px; }
-  .team-block { display:flex; align-items:center; gap:14px; min-width:0; flex:1 1 auto; }
+  .team-block { display:flex; align-items:center; gap:clamp(6px,2.4vw,14px); min-width:0; flex:1 1 auto; }
   .team-block.right { flex-direction:row-reverse; text-align:right; }
   .team-block > div { min-width:0; }
-  .team-name { font-size:21px; font-weight:800; color:#0f172a; line-height:1.1; overflow-wrap:break-word; }
-  .team-sub { font-size:12.5px; color:#64748b; font-weight:600; margin-top:2px; white-space:nowrap; }
+  .team-block svg { width:clamp(24px,7vw,42px); height:auto; }
+  .team-name { font-size:clamp(12px,3.6vw,21px); font-weight:800; color:#0f172a; line-height:1.15; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .team-sub { font-size:clamp(9px,2.1vw,12.5px); color:#64748b; font-weight:600; margin-top:2px; white-space:nowrap; }
   .score-block { text-align:center; flex:0 0 auto; }
-  .score-main { font-size:42px; font-weight:800; color:#0f172a; letter-spacing:2px; line-height:1; white-space:nowrap; }
-  .score-ht { font-size:12.5px; color:#64748b; font-weight:600; margin-top:6px; white-space:nowrap; }
-
-  @media (max-width:420px) {
-    .comp-line { font-size:9.5px; letter-spacing:1.2px; }
-    .team-block svg { width:26px; height:17px; }
-    .team-name { font-size:14px; }
-    .team-sub { font-size:9.5px; }
-    .score-main { font-size:24px; letter-spacing:1px; }
-    .score-ht { font-size:9.5px; }
-    .team-block { gap:8px; }
-  }
+  .score-main { font-size:clamp(19px,7.1vw,42px); font-weight:800; color:#0f172a; letter-spacing:1px; line-height:1; white-space:nowrap; }
+  .score-ht { font-size:clamp(9px,2.1vw,12.5px); color:#64748b; font-weight:600; margin-top:6px; white-space:nowrap; }
 
   .canvas-wrap { position:relative; margin-top:6px; width:100%; }
   canvas#momentum { display:block; width:100%; }
@@ -348,16 +339,35 @@ function buildGoalHits() {
     hit.style.top = (PAD.t) + 'px';
     hit.style.height = (CSS_H - PAD.t - PAD.b) + 'px';
     wrap.appendChild(hit);
-    hit.addEventListener('mouseenter', () => {
+    const showTooltip = () => {
       tooltip.innerHTML = '<span class="scorer">' + g.scorer + '</span><br>' + (g.team==='home' ? 'Inglaterra' : 'RD Congo') + " · " + g.min + "'" + (g.assist ? ('<br><span style=\"opacity:.7\">Asist.: ' + g.assist + '</span>') : '');
       tooltip.style.left = (x - 70) + 'px';
       tooltip.style.top = (PAD.t + 30) + 'px';
       tooltip.style.opacity = 1;
-    });
-    hit.addEventListener('mouseleave', () => { tooltip.style.opacity = 0; });
+    };
+    const hideTooltip = () => { tooltip.style.opacity = 0; };
+    hit.addEventListener('mouseenter', showTooltip);
+    hit.addEventListener('mouseleave', hideTooltip);
+    hit.addEventListener('touchstart', (e) => {
+      e.stopPropagation();
+      const isOpen = tooltip.style.opacity === '1';
+      document.querySelectorAll('.goal-hit').forEach(h => h.classList.remove('active'));
+      if (isOpen && hit.classList.contains('active')) {
+        hideTooltip();
+        hit.classList.remove('active');
+      } else {
+        showTooltip();
+        hit.classList.add('active');
+      }
+    }, { passive: true });
     goalHits.push(hit);
   });
 }
+
+document.addEventListener('touchstart', () => {
+  goalHits.forEach(h => h.classList.remove('active'));
+  tooltip.style.opacity = 0;
+});
 
 function render() {
   computeGeometry();
