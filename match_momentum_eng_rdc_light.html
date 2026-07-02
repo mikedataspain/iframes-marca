@@ -349,6 +349,7 @@ function buildGoalHits() {
     hit.addEventListener('mouseenter', showTooltip);
     hit.addEventListener('mouseleave', hideTooltip);
     hit.addEventListener('touchstart', (e) => {
+      e.preventDefault();
       e.stopPropagation();
       const isOpen = tooltip.style.opacity === '1';
       document.querySelectorAll('.goal-hit').forEach(h => h.classList.remove('active'));
@@ -359,7 +360,7 @@ function buildGoalHits() {
         showTooltip();
         hit.classList.add('active');
       }
-    }, { passive: true });
+    }, { passive: false });
     goalHits.push(hit);
   });
 }
