@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Zonas de control · Portugal 0-1 España</title>
+<style>
+html,body{width:100%;margin:0}
+body{padding:0;background:#f4f4f8;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+#card-zonas{width:100%;max-width:760px;margin:0 auto;box-sizing:border-box;background:#f4f4f8;border:1px solid #dde0ee;border-radius:14px;overflow:hidden}
+.zhdr{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:15px 20px 11px;border-bottom:1px solid #dde0ee}
+.zh-left{display:flex;align-items:center;gap:11px;min-width:0}
+.zh-match{display:flex;align-items:center;gap:7px;flex:none}
+.zh-match svg{width:clamp(22px,5vw,32px);height:auto}
+.zh-match .nm{color:#0f172a;font-weight:800;font-size:clamp(10px,2.6vw,14px);white-space:nowrap}
+.zh-match .sc{color:#7c3aed;font-weight:900;font-size:clamp(10px,2.6vw,14px);white-space:nowrap}
+.zh-title{min-width:0}
+.zh-title h1{margin:0;color:#0f172a;font-size:clamp(14px,3.6vw,22px);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zh-title .sub{color:#7c3aed;font-weight:700;letter-spacing:1px;font-size:clamp(7px,1.7vw,9.5px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.zh-right{text-align:right;flex:none}
+.zh-right .l1{color:#7c3aed;font-weight:800;letter-spacing:1px;font-size:clamp(8px,1.8vw,10px);white-space:nowrap}
+.zh-right .l2{color:#64748b;font-size:clamp(7px,1.8vw,10.5px);white-space:nowrap}
+.statbar{display:flex;justify-content:space-around;align-items:center;padding:12px 24px;background:#eceef6;border-bottom:1px solid #dde0ee}
+.st{text-align:center}
+.st .v{font-size:clamp(20px,5vw,30px);font-weight:900;line-height:1}
+.st .l{font-size:clamp(8px,1.9vw,10.5px);font-weight:700;letter-spacing:1.8px;margin-top:4px}
+.cwrap{position:relative;padding:14px 18px 6px}
+canvas#pitch{display:block;width:100%}
+#flags{position:absolute;top:14px;left:18px;right:18px;bottom:6px;pointer-events:none;overflow:hidden}
+.fz{position:absolute;border-radius:3px;overflow:hidden;box-shadow:0 1px 5px rgba(15,23,42,0.30)}
+.fz img{width:100%;height:100%;display:block;object-fit:cover}
+.ztt{position:absolute;background:#f4f4f8;border:1px solid #dde0ee;box-shadow:0 4px 14px rgba(15,23,42,0.18);border-radius:8px;padding:6px 10px;font-size:12px;color:#0f172a;pointer-events:none;display:none;z-index:6;white-space:nowrap}
+.ztt b{display:block;font-size:12.5px}
+.ztt span{color:#64748b;font-size:11px}
+.zlegend{display:flex;justify-content:center;gap:26px;padding:8px 24px 4px;flex-wrap:wrap}
+.zl{display:flex;align-items:center;gap:7px;color:#0f172a;font-weight:700;font-size:clamp(10px,2.4vw,13px)}
+.zl .sw{width:14px;height:14px;border-radius:3px}
+.zl .swd{width:14px;height:14px;border-radius:3px;border:1.6px dashed rgba(15,23,42,0.45);box-sizing:border-box}
+.card-footer{padding:5px 24px 13px;display:flex;justify-content:space-between}
+.cf-left{font-size:9px;font-weight:500;letter-spacing:0.3px;color:#64748b}
+.cf-right{font-size:9px;font-weight:600;letter-spacing:0.3px;color:#64748b}
+</style></head><body>
+<div id="card-zonas">
+  <div class="zhdr">
+    <div class="zh-left">
+      <div class="zh-match"><svg viewBox="0 0 42 28" style="width:clamp(22px,5vw,32px);height:auto;border-radius:3px;display:block" xmlns="http://www.w3.org/2000/svg"><rect width="17" height="28" fill="#046A38"/><rect x="17" width="25" height="28" fill="#DA291C"/><circle cx="17" cy="14" r="5.6" fill="#FFE900"/><circle cx="17" cy="14" r="3.4" fill="#DA291C"/></svg><span class="nm">Portugal</span><span class="sc">0-1</span><span class="nm">España</span><svg viewBox="0 0 42 28" style="width:clamp(22px,5vw,32px);height:auto;border-radius:3px;display:block" xmlns="http://www.w3.org/2000/svg"><rect width="42" height="9" fill="#c60b1e"/><rect y="9" width="42" height="10" fill="#ffc400"/><rect y="19" width="42" height="9" fill="#c60b1e"/></svg></div>
+      <div class="zh-title"><h1>Zonas de control</h1><div class="sub">UMBRAL ≥55% · LOCAL ATACA DERECHA</div></div>
+    </div>
+    <div class="zh-right"><div class="l1">COPA DEL MUNDO 2026 · OCTAVOS</div><div class="l2">Dallas Stadium · 6 jul 2026</div></div>
+  </div>
+  <div class="statbar">
+    <div class="st"><div class="v" style="color:#d97706">8</div><div class="l" style="color:#d97706">ZONAS POR</div></div>
+    <div class="st"><div class="v" style="color:#7c3aed">5</div><div class="l" style="color:#7c3aed">DISPUTADAS</div></div>
+    <div class="st"><div class="v" style="color:#2563eb">17</div><div class="l" style="color:#2563eb">ZONAS ESP</div></div>
+  </div>
+  <div class="cwrap">
+    <canvas id="pitch"></canvas>
+    <div id="flags"></div>
+    <div class="ztt" id="ztt"></div>
+  </div>
+  <div class="zlegend">
+    <div class="zl"><span class="sw" style="background:#d97706"></span>Portugal (≥55%)</div>
+    <div class="zl"><span class="sw" style="background:#2563eb"></span>España (≥55%)</div>
+    <div class="zl"><span class="swd"></span>Disputada (&lt;55%)</div>
+  </div>
+  <div class="card-footer"><span class="cf-left">Datos: Opta Stats Perform</span><span class="cf-right">Miguel Ángel García</span></div>
+</div>
+<script>
+const GRID=[[{"o":"a","ph":34.8,"h":8,"a":15},{"o":"a","ph":40.4,"h":23,"a":34},{"o":"h","ph":58.8,"h":40,"a":28},{"o":"h","ph":59.3,"h":51,"a":35},{"o":"a","ph":44.1,"h":30,"a":38},{"o":"n","ph":45.5,"h":10,"a":12}],[{"o":"n","ph":54.5,"h":18,"a":15},{"o":"n","ph":46.2,"h":30,"a":35},{"o":"a","ph":39.2,"h":29,"a":45},{"o":"a","ph":39.4,"h":28,"a":43},{"o":"a","ph":32.5,"h":13,"a":27},{"o":"a","ph":10.5,"h":2,"a":17}],[{"o":"h","ph":86.3,"h":63,"a":10},{"o":"h","ph":55.6,"h":25,"a":20},{"o":"a","ph":43.3,"h":29,"a":38},{"o":"n","ph":50.9,"h":29,"a":28},{"o":"a","ph":32.3,"h":10,"a":21},{"o":"a","ph":13.3,"h":6,"a":39}],[{"o":"h","ph":57.9,"h":11,"a":8},{"o":"a","ph":43.3,"h":26,"a":34},{"o":"a","ph":31.7,"h":20,"a":43},{"o":"a","ph":40,"h":18,"a":27},{"o":"a","ph":41.8,"h":23,"a":32},{"o":"h","ph":60,"h":6,"a":4}],[{"o":"n","ph":50,"h":11,"a":11},{"o":"a","ph":44,"h":11,"a":14},{"o":"a","ph":31.9,"h":15,"a":32},{"o":"a","ph":44,"h":22,"a":28},{"o":"h","ph":67.8,"h":40,"a":19},{"o":"h","ph":72.7,"h":8,"a":3}]];
+const HOME_C='#d97706',AWAY_C='#2563eb';
+const ASPECT=1/1.544;
+const wrap=document.querySelector('.cwrap'),canvas=document.getElementById('pitch'),
+      flagsDiv=document.getElementById('flags'),ztt=document.getElementById('ztt');
+const DPR=2;
+let CW,CH,pad,PW,PH,cells=[];
+function FX(ox){return pad.l+(ox/100)*PW;}
+function FY(oy){return pad.t+((100-oy)/100)*PH;}
+function computeGeometry(){
+  CW=wrap.clientWidth-36;CH=Math.round(CW*ASPECT);
+  canvas.style.width=CW+'px';canvas.style.height=CH+'px';
+  canvas.width=CW*DPR;canvas.height=CH*DPR;
+  const ctx=canvas.getContext('2d');ctx.setTransform(1,0,0,1,0,0);ctx.scale(DPR,DPR);
+  const s=CW/684;pad={l:14*s,r:14*s,t:10*s,b:10*s};
+  PW=CW-pad.l-pad.r;PH=CH-pad.t-pad.b;
+}
+function drawPitch(ctx){
+  const grd=ctx.createLinearGradient(0,0,CW,0);
+  grd.addColorStop(0,'#e0e3ef');grd.addColorStop(0.5,'#e8eaf2');grd.addColorStop(1,'#e0e3ef');
+  ctx.fillStyle=grd;ctx.fillRect(0,0,CW,CH);
+  ctx.fillStyle='rgba(0,0,0,0.025)';
+  for(let i=0;i<12;i+=2)ctx.fillRect(pad.l+i*PW/12,pad.t,PW/12,PH);
+  ctx.strokeStyle='rgba(0,0,0,0.20)';ctx.lineWidth=0.8;
+  ctx.strokeRect(pad.l,pad.t,PW,PH);
+  ctx.beginPath();ctx.moveTo(FX(50),pad.t);ctx.lineTo(FX(50),pad.t+PH);ctx.stroke();
+  const cR=Math.max(1,(9.15/68)*PH);
+  ctx.beginPath();ctx.arc(FX(50),FY(50),cR,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.arc(FX(50),FY(50),1.6,0,Math.PI*2);ctx.fillStyle='rgba(0,0,0,0.20)';ctx.fill();
+  // áreas
+  ctx.strokeRect(FX(0),FY(78.9),FX(17)-FX(0),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(83),FY(78.9),FX(100)-FX(83),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(0),FY(63.2),FX(5.8)-FX(0),FY(36.8)-FY(63.2));
+  ctx.strokeRect(FX(94.2),FY(63.2),FX(100)-FX(94.2),FY(36.8)-FY(63.2));
+  // puntos penalti
+  [11.5,88.5].forEach(px=>{ctx.beginPath();ctx.arc(FX(px),FY(50),1.6,0,Math.PI*2);ctx.fill();});
+  // arcos de área (clip fuera del área)
+  const penArcR=Math.max(1,(9.15/68)*PH);
+  ctx.save();ctx.beginPath();ctx.rect(FX(16.5),pad.t,PW-(FX(16.5)-pad.l),PH);ctx.clip();
+  ctx.beginPath();ctx.arc(FX(11.5),FY(50),penArcR,0,Math.PI*2);ctx.stroke();ctx.restore();
+  ctx.save();ctx.beginPath();ctx.rect(pad.l,pad.t,FX(83.5)-pad.l,PH);ctx.clip();
+  ctx.beginPath();ctx.arc(FX(88.5),FY(50),penArcR,0,Math.PI*2);ctx.stroke();ctx.restore();
+  // porterías
+  ctx.strokeStyle='rgba(0,0,0,0.35)';ctx.lineWidth=1.8;
+  ctx.strokeRect(pad.l-4*(CW/684),FY(55.8),4*(CW/684),FY(44.2)-FY(55.8));
+  ctx.strokeRect(pad.l+PW,FY(55.8),4*(CW/684),FY(44.2)-FY(55.8));
+}
+function drawZones(ctx){
+  cells=[];flagsDiv.innerHTML='';
+  const cw=PW/6,chh=PH/5;
+  for(let r=0;r<5;r++)for(let c=0;c<6;c++){
+    const cell=GRID[r][c],x=pad.l+c*cw,y=pad.t+r*chh;
+    cells.push({x,y,w:cw,h:chh,cell});
+    if(cell.o==='h'||cell.o==='a'){
+      const col=cell.o==='h'?HOME_C:AWAY_C;
+      ctx.fillStyle=col+'5c';ctx.fillRect(x,y,cw,chh);
+      ctx.strokeStyle=col+'ad';ctx.lineWidth=1.6;ctx.strokeRect(x+0.8,y+0.8,cw-1.6,chh-1.6);
+      const fw=Math.min(cw*0.38,52),fh=fw*2/3;
+      const fz=document.createElement('div');fz.className='fz';
+      fz.style.left=(x+cw/2-fw/2)+'px';fz.style.top=(y+chh/2-fh/2)+'px';
+      fz.style.width=fw+'px';fz.style.height=fh+'px';
+      fz.innerHTML='<img src="https://flagcdn.com/h40/'+(cell.o==='h'?'pt':'es')+'.png" alt="">';
+      flagsDiv.appendChild(fz);
+    }else{
+      ctx.save();ctx.strokeStyle='rgba(15,23,42,0.38)';ctx.lineWidth=1.2;ctx.setLineDash([5,4]);
+      ctx.strokeRect(x+1.5,y+1.5,cw-3,chh-3);ctx.restore();
+    }
+  }
+}
+function render(){
+  computeGeometry();
+  const ctx=canvas.getContext('2d');
+  drawPitch(ctx);drawZones(ctx);
+  reportHeight();
+}
+function findCell(px,py){
+  const rect=canvas.getBoundingClientRect();
+  const x=px-rect.left,y=py-rect.top;
+  return cells.find(cl=>x>=cl.x&&x<cl.x+cl.w&&y>=cl.y&&y<cl.y+cl.h);
+}
+function showTT(cl,clientX,clientY){
+  const c=cl.cell,tot=c.h+c.a;
+  const owner=c.o==='h'?'Portugal':(c.o==='a'?'España':'Disputada');
+  ztt.innerHTML='<b>'+owner+(c.o!=='n'?' '+((c.o==='h'?c.ph:100-c.ph).toFixed(0))+'%':'')+'</b><span>POR '+c.h+' · ESP '+c.a+' toques ('+tot+')</span>';
+  ztt.style.display='block';ztt.style.left='0px';ztt.style.top='0px';
+  const wr=wrap.getBoundingClientRect();
+  const tw=ztt.offsetWidth,th=ztt.offsetHeight;
+  let lx=clientX-wr.left+12,ly=clientY-wr.top-th-8;
+  lx=Math.max(4,Math.min(lx,wrap.clientWidth-tw-4));ly=Math.max(4,ly);
+  ztt.style.left=lx+'px';ztt.style.top=ly+'px';
+}
+canvas.addEventListener('mousemove',e=>{const cl=findCell(e.clientX,e.clientY);if(cl)showTT(cl,e.clientX,e.clientY);else ztt.style.display='none';});
+canvas.addEventListener('mouseleave',()=>ztt.style.display='none');
+canvas.addEventListener('touchstart',e=>{e.preventDefault();e.stopPropagation();
+  const t=e.touches[0],cl=findCell(t.clientX,t.clientY);
+  if(cl){if(ztt.style.display==='block')ztt.style.display='none';else showTT(cl,t.clientX,t.clientY);}
+  else ztt.style.display='none';
+},{passive:false});
+document.addEventListener('touchstart',e=>{if(e.target!==canvas)ztt.style.display='none';});
+function reportHeight(){
+  const h=Math.ceil(document.getElementById('card-zonas').getBoundingClientRect().height);
+  if(window.parent===window)return;
+  window.parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
+  window.parent.postMessage({mmResize:true,height:h},'*');
+}
+let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(render,120);});
+render();
+</script></body></html>
