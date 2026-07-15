@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Campograma de portería — Francia a España</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;background:#1a0638;font-family:'Segoe UI',Inter,system-ui,sans-serif}
+body{padding:0}
+#card-gm{width:100%;max-width:640px;margin:0 auto;background:#260a52;border:1px solid #3d1070;border-radius:14px;overflow:hidden}
+
+.ch{padding:16px 22px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid #3d1070}
+.ch-left{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
+.flag-wrap{flex-shrink:0;width:clamp(26px,7vw,38px);height:auto;aspect-ratio:38/25;border-radius:3px;overflow:hidden}
+.flag-wrap img{width:100%;height:100%;object-fit:cover;display:block}
+.ch-team{min-width:0}
+.team-name{font-size:clamp(14px,4vw,20px);font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.15}
+.team-sub{font-size:clamp(7px,1.8vw,10px);color:#00e5ff;text-transform:uppercase;letter-spacing:0.6px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ch-right{flex-shrink:0;text-align:right}
+.comp-line{font-size:clamp(7px,1.8vw,10px);color:#9966cc;text-transform:uppercase;letter-spacing:0.6px;white-space:nowrap}
+.match-line{font-size:clamp(7px,1.8vw,10px);color:#9966cc;text-transform:uppercase;letter-spacing:0.6px;margin-top:2px;white-space:nowrap}
+
+.sb{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid #3d1070}
+.sc{text-align:center;padding:9px 4px;border-right:1px solid #3d1070}
+.sc:last-child{border-right:none}
+.sv{font-size:clamp(13px,3.6vw,19px);font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sl{font-size:8px;color:#9966cc;margin-top:3px;text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sc.acc .sv{color:#00e5ff}
+
+.gwrap{position:relative;padding:22px 30px 14px}
+canvas{display:block;width:100%}
+#tt{position:fixed;display:none;background:rgba(20,4,48,.97);border:1px solid #3d1070;border-radius:8px;padding:8px 12px;pointer-events:none;z-index:200;max-width:220px}
+.tn{font-size:12px;font-weight:700}
+.tr{font-size:11px;color:#fff;margin-top:2px}
+
+.legend{display:flex;justify-content:center;gap:16px;padding:6px 0 14px;background:#260a52;flex-wrap:wrap}
+.li{display:flex;align-items:center;gap:6px}
+.ld{width:11px;height:11px;border-radius:50%}
+.lt{font-size:clamp(9px,2.2vw,11px);color:#fff;letter-spacing:0.2px;white-space:nowrap}
+
+.card-footer{padding:5px 22px 13px;display:flex;justify-content:space-between}
+.cf-left,.cf-right{font-size:9px;letter-spacing:0.3px;color:#aaa}
+.cf-right{font-weight:600}
+</style>
+</head>
+<body>
+<div id="card-gm">
+
+  <div class="ch">
+    <div class="ch-left">
+      <div class="flag-wrap"><img src="https://flagcdn.com/h40/fr.png" alt="FRA"></div>
+      <div class="ch-team">
+        <div class="team-name">Francia</div>
+        <div class="team-sub">Tiros a la portería de España</div>
+      </div>
+    </div>
+    <div class="ch-right">
+      <div class="comp-line">Copa del Mundo 2026 · Semifinales</div>
+      <div class="match-line">vs España (0-2) · Dallas · 14 jul 2026</div>
+    </div>
+  </div>
+
+  <div class="sb">
+    <div class="sc"><div class="sv">10</div><div class="sl">Tiros</div></div>
+    <div class="sc acc"><div class="sv">3</div><div class="sl">A puerta</div></div>
+    <div class="sc"><div class="sv">7</div><div class="sl">Fuera</div></div>
+    <div class="sc"><div class="sv">0</div><div class="sl">Goles</div></div>
+    <div class="sc"><div class="sv">0%</div><div class="sl">Efectividad</div></div>
+  </div>
+
+  <div class="gwrap">
+    <canvas id="cnv"></canvas>
+  </div>
+
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:#00e5ff"></div><span class="lt">Gol</span></div>
+    <div class="li"><div class="ld" style="background:#ff1493"></div><span class="lt">Parada</span></div>
+    <div class="li"><div class="ld" style="background:#ffffff;border:1px solid rgba(255,255,255,.4)"></div><span class="lt">Fuera</span></div>
+    <div class="li"><div class="ld" style="background:#FF8C00"></div><span class="lt">Poste</span></div>
+  </div>
+
+  <div class="card-footer">
+    <span class="cf-left">Datos: Opta Stats Perform</span>
+    <span class="cf-right">Miguel Ángel García</span>
+  </div>
+</div>
+
+<div id="tt"></div>
+
+<script>
+const SHOTS = [{"min": 5, "player": "A. Rabiot", "result": "miss", "end_y": 81.5, "end_z": 5.6, "foot": "Izquierda"}, {"min": 35, "player": "B. Barcola", "result": "miss", "end_y": 36.1, "end_z": 75.0, "foot": "Derecha"}, {"min": 64, "player": "A. Tchouaméni", "result": "miss", "end_y": 51.8, "end_z": 93.1, "foot": "Derecha"}, {"min": 80, "player": "D. Doué", "result": "saved", "end_y": 49.4, "end_z": 20.2, "foot": "Derecha"}, {"min": 88, "player": "K. Mbappé", "result": "miss", "end_y": 50.8, "end_z": 76.4, "foot": "Derecha"}, {"min": 94, "player": "O. Dembélé", "result": "saved", "end_y": 49.2, "end_z": 23.4, "foot": "Izquierda"}, {"min": 96, "player": "O. Dembélé", "result": "saved", "end_y": 50.9, "end_z": 15.8, "foot": "Derecha"}, {"min": 96, "player": "K. Mbappé", "result": "miss", "end_y": 47.2, "end_z": 72.2, "foot": "Derecha"}];
+const COLORS = { goal:'#00e5ff', saved:'#ff1493', miss:'#ffffff', post:'#FF8C00' };
+const RESULT_LABEL = { goal:'Gol', saved:'Parada', miss:'Fuera', post:'Poste' };
+const ZONE_STOPS = [[0,[0,229,255,0.0]],[0.33,[0,229,255,0.22]],[0.66,[180,0,255,0.38]],[1.0,[255,20,147,0.55]]];
+
+const OPT_PL = 45.2, OPT_PR = 54.8, OPT_CROSS = 38.0;
+const POST_L = 0.15, POST_R = 0.85, CROSS = 0.30, GROUND = 0.85;
+const MARG_H = 0.09, MARG_TOP = 0.22;
+
+function shotToCanvas(end_y, end_z, CW, CH){
+  let xf;
+  if(end_y >= OPT_PL && end_y <= OPT_PR){
+    xf = POST_R - ((end_y-OPT_PL)/(OPT_PR-OPT_PL))*(POST_R-POST_L);
+  } else if(end_y < OPT_PL){
+    xf = POST_R + Math.min((OPT_PL-end_y)/3.0,1.0)*MARG_H;
+  } else {
+    xf = POST_L - Math.min((end_y-OPT_PR)/3.0,1.0)*MARG_H;
+  }
+  let yf;
+  if(end_z >= 0 && end_z <= OPT_CROSS){
+    yf = GROUND - (end_z/OPT_CROSS)*(GROUND-CROSS);
+  } else if(end_z < 0){
+    yf = GROUND + 0.04;
+  } else {
+    yf = CROSS - Math.min((end_z-OPT_CROSS)/60.0,1.0)*MARG_TOP;
+  }
+  return { sx: xf*CW, sy: yf*CH };
+}
+
+function zoneColor(t){
+  for(let i=1;i<ZONE_STOPS.length;i++){
+    if(t<=ZONE_STOPS[i][0]){
+      const [t0,c0]=ZONE_STOPS[i-1], [t1,c1]=ZONE_STOPS[i];
+      const f=(t-t0)/(t1-t0||1);
+      const r=c0[0]+(c1[0]-c0[0])*f, g=c0[1]+(c1[1]-c0[1])*f, b=c0[2]+(c1[2]-c0[2])*f, a=c0[3]+(c1[3]-c0[3])*f;
+      return `rgba(${r|0},${g|0},${b|0},${a.toFixed(2)})`;
+    }
+  }
+  const last=ZONE_STOPS[ZONE_STOPS.length-1][1];
+  return `rgba(${last[0]},${last[1]},${last[2]},${last[3]})`;
+}
+
+const canvas = document.getElementById('cnv');
+const ctx = canvas.getContext('2d');
+const tt = document.getElementById('tt');
+const wrap = canvas.parentElement;
+const DPR = Math.min(window.devicePixelRatio||1,2);
+const ASPECT = 1/1.8;
+let CW, CH, hits=[];
+
+function computeGeometry(){
+  CW = wrap.clientWidth;
+  CH = Math.round(CW*ASPECT);
+  canvas.style.width = CW+'px';
+  canvas.style.height = CH+'px';
+  canvas.width = CW*DPR;
+  canvas.height = CH*DPR;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(DPR,DPR);
+}
+
+function drawGoalFrame(){
+  const bg = ctx.createLinearGradient(0,0,CW,0);
+  bg.addColorStop(0,'#1a0638'); bg.addColorStop(.5,'#260a52'); bg.addColorStop(1,'#1a0638');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
+
+  const pg = ctx.createLinearGradient(0,0,CW,CH);
+  pg.addColorStop(0,'#190637'); pg.addColorStop(.5,'#1e0840'); pg.addColorStop(1,'#190637');
+  ctx.fillStyle=pg; ctx.fillRect(CW*0.10,CH*0.08,CW*0.80,CH*0.85);
+
+  // frame corners in fraction space
+  const x0=POST_L*CW, x1=POST_R*CW, yTop=CROSS*CH, yBot=GROUND*CH;
+
+  // net grid
+  const cols=20, rows=9;
+  ctx.strokeStyle='rgba(255,255,255,0.07)'; ctx.lineWidth=0.6;
+  for(let c=0;c<=cols;c++){
+    const x = x0 + (x1-x0)*(c/cols);
+    ctx.beginPath(); ctx.moveTo(x,yTop); ctx.lineTo(x,yBot); ctx.stroke();
+  }
+  for(let r=0;r<=rows;r++){
+    const y = yTop + (yBot-yTop)*(r/rows);
+    ctx.beginPath(); ctx.moveTo(x0,y); ctx.lineTo(x1,y); ctx.stroke();
+  }
+}
+
+function drawFrameLines(){
+  const x0=POST_L*CW, x1=POST_R*CW, yTop=CROSS*CH, yBot=GROUND*CH;
+  ctx.strokeStyle='rgba(255,255,255,0.55)';
+  ctx.lineWidth=3.5; ctx.lineCap='round'; ctx.lineJoin='round';
+  ctx.beginPath();
+  ctx.moveTo(x0,yBot); ctx.lineTo(x0,yTop); ctx.lineTo(x1,yTop); ctx.lineTo(x1,yBot);
+  ctx.stroke();
+}
+
+// Zone grid: 3x3, only shots inside frame counted
+const ZONE_ROWS=3, ZONE_COLS=3;
+function computeZoneGrid(){
+  const grid = Array.from({length:ZONE_ROWS},()=>Array(ZONE_COLS).fill(0));
+  SHOTS.forEach(s=>{
+    if(s.end_y>=OPT_PL && s.end_y<=OPT_PR && s.end_z>=0 && s.end_z<=OPT_CROSS){
+      let col = Math.min(ZONE_COLS-1, Math.floor((s.end_y-OPT_PL)/((OPT_PR-OPT_PL)/ZONE_COLS)));
+      let row = Math.min(ZONE_ROWS-1, ZONE_ROWS-1-Math.floor(s.end_z/(OPT_CROSS/ZONE_ROWS)));
+      grid[row][col]++;
+    }
+  });
+  return grid;
+}
+
+function drawZoneFills(grid){
+  const x0=POST_L*CW, x1=POST_R*CW, yTop=CROSS*CH, yBot=GROUND*CH;
+  const cw=(x1-x0)/ZONE_COLS, ch=(yBot-yTop)/ZONE_ROWS;
+  let max=0; grid.forEach(row=>row.forEach(v=>max=Math.max(max,v)));
+  if(max===0) max=1;
+  for(let r=0;r<ZONE_ROWS;r++) for(let c=0;c<ZONE_COLS;c++){
+    const v=grid[r][c];
+    const t=v/max;
+    ctx.fillStyle = zoneColor(t);
+    ctx.fillRect(x0+c*cw, yTop+r*ch, cw, ch);
+  }
+  ctx.strokeStyle='rgba(255,255,255,0.12)'; ctx.lineWidth=1;
+  for(let c=1;c<ZONE_COLS;c++){ ctx.beginPath(); ctx.moveTo(x0+c*cw,yTop); ctx.lineTo(x0+c*cw,yBot); ctx.stroke(); }
+  for(let r=1;r<ZONE_ROWS;r++){ ctx.beginPath(); ctx.moveTo(x0,yTop+r*ch); ctx.lineTo(x1,yTop+r*ch); ctx.stroke(); }
+}
+
+function drawZoneLabels(grid){
+  const x0=POST_L*CW, x1=POST_R*CW, yTop=CROSS*CH, yBot=GROUND*CH;
+  const cw=(x1-x0)/ZONE_COLS, ch=(yBot-yTop)/ZONE_ROWS;
+  ctx.font='700 12px Segoe UI,Inter,sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  for(let r=0;r<ZONE_ROWS;r++) for(let c=0;c<ZONE_COLS;c++){
+    const v=grid[r][c];
+    if(v===0) continue;
+    const cx=x0+c*cw+cw/2, cy=yTop+r*ch+ch/2;
+    ctx.fillStyle='rgba(0,0,0,0.55)';
+    ctx.beginPath(); ctx.roundRect(cx-14,cy-11,28,22,6); ctx.fill();
+    ctx.fillStyle='#ffffff';
+    ctx.fillText(v, cx, cy+0.5);
+  }
+}
+
+function drawDots(){
+  hits=[];
+  const s = CW/580;
+  SHOTS.forEach(sh=>{
+    const {sx,sy} = shotToCanvas(sh.end_y, sh.end_z, CW, CH);
+    const color = COLORS[sh.result];
+    const r = 6*s;
+
+    if(sh.result==='goal' || sh.result==='saved'){
+      const glow = ctx.createRadialGradient(sx,sy,0,sx,sy,r*2.6);
+      glow.addColorStop(0, hexToRgba(color,0.4));
+      glow.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(sx,sy,r*2.6,0,Math.PI*2); ctx.fill();
+    }
+
+    ctx.beginPath(); ctx.arc(sx,sy,r,0,Math.PI*2);
+    ctx.fillStyle = hexToRgba(color,0.85);
+    ctx.fill();
+    ctx.lineWidth=1.6; ctx.strokeStyle=color==='#ffffff' ? 'rgba(255,255,255,0.9)' : color;
+    ctx.stroke();
+
+    hits.push({x:sx,y:sy,r:Math.max(r,9*s),shot:sh});
+  });
+}
+
+function hexToRgba(hex,a){
+  const v=hex.replace('#','');
+  const r=parseInt(v.substring(0,2),16), g=parseInt(v.substring(2,4),16), b=parseInt(v.substring(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+function render(){
+  computeGeometry();
+  drawGoalFrame();
+  const grid = computeZoneGrid();
+  drawZoneFills(grid);
+  drawDots();
+  drawZoneLabels(grid);
+  drawFrameLines();
+  reportHeight();
+}
+
+function reportHeight(){
+  const card=document.getElementById('card-gm');
+  const h=Math.ceil(card.getBoundingClientRect().height);
+  if(window.parent===window) return;
+  window.parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
+  window.parent.postMessage({mmResize:true,height:h},'*');
+}
+
+function findHit(cx,cy){
+  for(const h of hits){
+    const dx=cx-h.x, dy=cy-h.y;
+    if(dx*dx+dy*dy<=h.r*h.r) return h;
+  }
+  return null;
+}
+
+function showTT(h,px,py){
+  const s=h.shot;
+  tt.innerHTML=`<div class="tn" style="color:${COLORS[s.result]==='#ffffff'?'#fff':COLORS[s.result]}">${s.player} · ${s.min}'</div><div class="tr">${RESULT_LABEL[s.result]} · ${s.foot}</div>`;
+  tt.style.display='block';
+  tt.style.left='0'; tt.style.top='0';
+  const tw=tt.offsetWidth, th=tt.offsetHeight;
+  const ml=window.innerWidth-tw-8, mt=window.innerHeight-th-8;
+  tt.style.left=Math.max(6,Math.min(px+14,ml))+'px';
+  tt.style.top =Math.max(6,Math.min(py-24,mt))+'px';
+}
+
+canvas.addEventListener('mousemove',e=>{
+  const r=canvas.getBoundingClientRect();
+  const scale=CW/r.width;
+  const h=findHit((e.clientX-r.left)*scale,(e.clientY-r.top)*scale);
+  if(h){canvas.style.cursor='pointer';showTT(h,e.clientX,e.clientY);}
+  else {canvas.style.cursor='default';tt.style.display='none';}
+});
+canvas.addEventListener('mouseleave',()=>{tt.style.display='none';});
+
+canvas.addEventListener('touchstart',e=>{
+  e.preventDefault(); e.stopPropagation();
+  const t=e.touches[0];
+  const r=canvas.getBoundingClientRect();
+  const scale=CW/r.width;
+  const h=findHit((t.clientX-r.left)*scale,(t.clientY-r.top)*scale);
+  if(h){
+    if(tt.style.display==='block') tt.style.display='none';
+    else showTT(h,t.clientX,t.clientY);
+  } else tt.style.display='none';
+},{passive:false});
+document.addEventListener('touchstart',e=>{if(e.target!==canvas) tt.style.display='none';});
+
+render();
+let rt;
+window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(render,120);});
+</script>
+</body>
+</html>
