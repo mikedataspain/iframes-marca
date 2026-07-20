@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zonas de control · España vs Argentina · Final Copa del Mundo 2026</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;background:#1a0638;font-family:'Segoe UI',Inter,system-ui,sans-serif}
+body{padding:0}
+#card{width:100%;max-width:720px;margin:0 auto;background:#260a52;border:1px solid #3d1070;border-radius:12px;overflow:hidden}
+
+/* HEADER */
+.hdr{padding:15px 18px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hdr-left{display:flex;align-items:center;gap:12px;min-width:0}
+.flags-mini{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.flags-mini .flag-svg{width:clamp(20px,5vw,28px);height:auto;aspect-ratio:44/30;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.1);display:block}
+.flags-vs{font-size:11px;color:#9966cc;font-weight:700;padding:0 2px}
+.htitle-wrap{min-width:0}
+.htitle{font-size:clamp(13px,3.6vw,17px);font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hsub{font-size:clamp(7.5px,1.8vw,10px);color:#cc99ff;letter-spacing:0.7px;text-transform:uppercase;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-right{text-align:right;flex-shrink:0}
+.mcomp{font-size:clamp(7.5px,1.8vw,10px);color:#fff;letter-spacing:0.8px;text-transform:uppercase;opacity:.8;white-space:nowrap}
+.mextra{font-size:clamp(7px,1.6vw,9.5px);color:#fff;margin-top:2px;opacity:.6;white-space:nowrap}
+
+/* STATS BAR */
+.sbar{display:grid;grid-template-columns:1fr 1px 1fr 1px 1fr;border-top:1px solid #3d1070;border-bottom:1px solid #3d1070}
+.sdiv{background:#3d1070}
+.sbox{text-align:center;padding:10px 6px 9px}
+.sn{font-size:clamp(17px,4.6vw,22px);font-weight:900;line-height:1}
+.sl{font-size:clamp(7.5px,1.7vw,9px);color:#fff;letter-spacing:1px;text-transform:uppercase;margin-top:3px;opacity:.6}
+
+/* PITCH */
+.cwrap{position:relative}
+canvas{display:block;width:100%}
+#flags-overlay{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden}
+.fz{position:absolute;display:flex;align-items:center;justify-content:center}
+.fz svg{width:100%;height:100%;opacity:0.92;border-radius:2px}
+
+/* LEGEND */
+.legend{padding:9px 18px 12px;border-top:1px solid #3d1070;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+.ltitle{font-size:9px;color:#cc99ff;letter-spacing:1.2px;text-transform:uppercase;margin-right:2px}
+.li{display:flex;align-items:center;gap:6px;font-size:clamp(9px,2vw,10.5px);color:#fff;font-weight:600}
+.lz{width:14px;height:14px;border-radius:3px;flex-shrink:0}
+
+/* FOOTER */
+.card-footer{padding:5px 20px 13px;display:flex;justify-content:space-between;border-top:1px solid #3d1070}
+.cf-left,.cf-right{font-size:9px;letter-spacing:0.3px;color:#aaa}
+.cf-right{font-weight:600}
+
+/* TOOLTIP */
+#tt{position:fixed;display:none;background:rgba(20,4,48,.97);border:1px solid #3d1070;border-radius:8px;padding:8px 12px;pointer-events:none;z-index:200;min-width:150px}
+.tn{font-size:12px;font-weight:800}
+.tr{font-size:11px;color:#cc99ff;margin-top:2px}
+</style>
+</head>
+<body>
+<div id="card">
+
+  <div class="hdr">
+    <div class="hdr-left">
+      <div class="flags-mini">
+        <svg viewBox="0 0 42 28" class="flag-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect width="42" height="9"  y="0"  fill="#c60b1e"/>
+          <rect width="42" height="10" y="9"  fill="#ffc400"/>
+          <rect width="42" height="9"  y="19" fill="#c60b1e"/>
+        </svg>
+        <span class="flags-vs">1-0</span>
+        <svg viewBox="0 0 42 28" class="flag-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect width="42" height="28" fill="#FFFFFF"/>
+          <rect width="42" height="9"  y="0"  fill="#75AADB"/>
+          <rect width="42" height="9"  y="19" fill="#75AADB"/>
+          <circle cx="21" cy="14" r="3.4" fill="#FCBF49" stroke="#85340A" stroke-width="0.4"/>
+        </svg>
+      </div>
+      <div class="htitle-wrap">
+        <div class="htitle">Zonas de control</div>
+        <div class="hsub">Umbral ≥55% de toques por zona · local ataca derecha</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="mcomp">Copa del Mundo 2026 · Final</div>
+      <div class="mextra">España vs Argentina · MetLife Stadium</div>
+    </div>
+  </div>
+
+  <div class="sbar">
+    <div class="sbox"><div class="sn" style="color:#00e5ff" id="snHome"></div><div class="sl">Zonas ESP</div></div>
+    <div class="sdiv"></div>
+    <div class="sbox"><div class="sn" style="color:#cc99ff" id="snDisp"></div><div class="sl">Disputadas</div></div>
+    <div class="sdiv"></div>
+    <div class="sbox"><div class="sn" style="color:#ff1493" id="snAway"></div><div class="sl">Zonas ARG</div></div>
+  </div>
+
+  <div class="cwrap">
+    <canvas id="cnv"></canvas>
+    <div id="flags-overlay"></div>
+  </div>
+
+  <div class="legend">
+    <span class="ltitle">Leyenda:</span>
+    <div class="li"><div class="lz" style="background:rgba(0,229,255,.38);border:1.5px solid rgba(0,229,255,.7)"></div>España (&ge;55%)</div>
+    <div class="li"><div class="lz" style="background:rgba(255,20,147,.38);border:1.5px solid rgba(255,20,147,.7)"></div>Argentina (&ge;55%)</div>
+    <div class="li"><div class="lz" style="background:transparent;border:1.5px dashed #cc99ff;opacity:.6"></div>Disputada (&lt;55%)</div>
+  </div>
+
+  <div class="card-footer">
+    <span class="cf-left">Datos: Opta Stats Perform</span>
+    <span class="cf-right">Miguel Ángel García</span>
+  </div>
+</div>
+
+<div id="tt"></div>
+
+<script>
+// ── DATA: toques por celda 6x5 (fila0=y80-100 ... fila4=y0-20) ────────────
+// G1 = España (local, x tal cual) · G2 = Argentina (visitante, mirror x=100-x)
+const G1=[[11,34,23,60,60,27],[27,42,45,60,43,6],[32,42,45,58,42,24],[12,61,76,70,60,26],[10,55,61,72,71,34]];
+const G2=[[5,19,33,32,54,17],[0,7,35,41,58,27],[5,4,27,36,38,95],[8,21,23,40,38,18],[13,17,44,49,51,30]];
+const F1='rgba(0,229,255,.38)', B1='rgba(0,229,255,.7)';
+const F2='rgba(255,20,147,.38)', B2='rgba(255,20,147,.7)';
+const NAME1='España', NAME2='Argentina';
+const FLAG1 = `<svg viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <rect width="42" height="9"  y="0"  fill="#c60b1e"/>
+  <rect width="42" height="10" y="9"  fill="#ffc400"/>
+  <rect width="42" height="9"  y="19" fill="#c60b1e"/>
+</svg>`;
+const FLAG2 = `<svg viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block">
+  <rect width="42" height="28" fill="#FFFFFF"/>
+  <rect width="42" height="9"  y="0"  fill="#75AADB"/>
+  <rect width="42" height="9"  y="19" fill="#75AADB"/>
+  <circle cx="21" cy="14" r="3.4" fill="#FCBF49" stroke="#85340A" stroke-width="0.4"/>
+</svg>`;
+const THRESHOLD=0.55, DPR=Math.min(window.devicePixelRatio||1,2);
+
+let _markers=[];
+
+function drawPitch(ctx,W,H){
+  const pad={t:14,b:14,l:14,r:14};
+  const PW=W-pad.l-pad.r, PH=H-pad.t-pad.b;
+  const FX=ox=>pad.l+(ox/100)*PW, FY=oy=>pad.t+((100-oy)/100)*PH;
+
+  ctx.fillStyle='#1e0840'; ctx.fillRect(0,0,W,H);
+  const gr=ctx.createLinearGradient(pad.l,pad.t,pad.l+PW,pad.t+PH);
+  gr.addColorStop(0,'#1a0638'); gr.addColorStop(.5,'#260a52'); gr.addColorStop(1,'#1a0638');
+  ctx.fillStyle=gr; ctx.beginPath(); ctx.roundRect(pad.l,pad.t,PW,PH,3); ctx.fill();
+
+  for(let i=0;i<10;i++) if(i%2===0){ ctx.fillStyle='rgba(255,255,255,.022)'; ctx.fillRect(pad.l+i*(PW/10),pad.t,PW/10,PH); }
+
+  const lc='rgba(255,255,255,.18)', glc='rgba(255,255,255,.35)';
+  ctx.strokeStyle=lc; ctx.lineWidth=.8;
+  ctx.strokeRect(pad.l,pad.t,PW,PH);
+  ctx.beginPath(); ctx.moveTo(FX(50),pad.t); ctx.lineTo(FX(50),pad.t+PH); ctx.stroke();
+  ctx.beginPath(); ctx.arc(FX(50),FY(50),2,0,Math.PI*2); ctx.fillStyle=lc; ctx.fill();
+  const cR=Math.max(1,(9.15/68)*PH);
+  ctx.beginPath(); ctx.arc(FX(50),FY(50),cR,0,Math.PI*2); ctx.stroke();
+
+  ctx.strokeRect(FX(0),FY(78.9),FX(16.5)-FX(0),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(83.5),FY(78.9),FX(100)-FX(83.5),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(0),FY(63.2),FX(5.8)-FX(0),FY(36.8)-FY(63.2));
+  ctx.strokeRect(FX(94.2),FY(63.2),FX(100)-FX(94.2),FY(36.8)-FY(63.2));
+
+  const gT=FY(54.7), gB=FY(45.3), gD=Math.max(4,PW*.012);
+  ctx.strokeStyle=glc; ctx.lineWidth=1.4;
+  ctx.strokeRect(pad.l-gD,gT,gD,gB-gT); ctx.strokeRect(pad.l+PW,gT,gD,gB-gT);
+
+  ctx.strokeStyle=lc; ctx.lineWidth=.8;
+  [FX(11.5),FX(88.5)].forEach(x=>{ ctx.beginPath(); ctx.arc(x,FY(50),1.5,0,Math.PI*2); ctx.fillStyle=lc; ctx.fill(); });
+
+  const penArcR=Math.max(1,(9.15/68)*PH);
+  ctx.save(); ctx.beginPath(); ctx.rect(FX(16.5),pad.t,PW-(FX(16.5)-pad.l),PH); ctx.clip();
+  ctx.beginPath(); ctx.arc(FX(11.5),FY(50),penArcR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(pad.l,pad.t,FX(83.5)-pad.l,PH); ctx.clip();
+  ctx.beginPath(); ctx.arc(FX(88.5),FY(50),penArcR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+
+  const cRc=Math.max(2,PH*.025);
+  [[pad.l,FY(100),0,Math.PI/2],[pad.l,FY(0),-Math.PI/2,0],
+   [pad.l+PW,FY(100),Math.PI/2,Math.PI],[pad.l+PW,FY(0),Math.PI,3*Math.PI/2]].forEach(([x,y,a1,a2])=>{
+    ctx.save(); ctx.beginPath(); ctx.rect(x-cRc*1.5,y-cRc*1.5,cRc*3,cRc*3); ctx.clip();
+    ctx.beginPath(); ctx.arc(x,y,cRc,a1,a2); ctx.stroke(); ctx.restore();
+  });
+  return {FX,FY,pad,PW,PH};
+}
+
+function drawZones(ctx,pad,PW,PH){
+  const CW=PW/6, CH=PH/5;
+  const markers=[];
+  for(let row=0;row<5;row++) for(let col=0;col<6;col++){
+    const g1=G1[row][col], g2=G2[row][col], total=g1+g2;
+    if(!total) continue;
+    const p1=g1/total, p2=g2/total;
+    const zx=pad.l+col*CW, zy=pad.t+row*CH;
+    let fill=null, brd=null, ctrl=null;
+    if(p1>=THRESHOLD){ fill=F1; brd=B1; ctrl=1; }
+    else if(p2>=THRESHOLD){ fill=F2; brd=B2; ctrl=2; }
+    if(fill){
+      ctx.fillStyle=fill; ctx.fillRect(zx,zy,CW,CH);
+      ctx.strokeStyle=brd; ctx.lineWidth=1.2; ctx.setLineDash([]);
+      ctx.strokeRect(zx+.6,zy+.6,CW-1.2,CH-1.2);
+    }
+    markers.push({row,col,g1,g2,total,p1,p2,ctrl,zx,zy,zw:CW,zh:CH});
+  }
+  ctx.strokeStyle='rgba(255,255,255,.14)'; ctx.lineWidth=.7; ctx.setLineDash([4,5]);
+  for(let c=1;c<6;c++){ ctx.beginPath(); ctx.moveTo(pad.l+c*CW,pad.t); ctx.lineTo(pad.l+c*CW,pad.t+PH); ctx.stroke(); }
+  for(let r=1;r<5;r++){ ctx.beginPath(); ctx.moveTo(pad.l,pad.t+r*CH); ctx.lineTo(pad.l+PW,pad.t+r*CH); ctx.stroke(); }
+  ctx.setLineDash([]);
+  return markers;
+}
+
+function placeFlags(markers, padL, padT, PW, PH){
+  const overlay=document.getElementById('flags-overlay');
+  overlay.innerHTML='';
+  const CW=PW/6, CH=PH/5;
+  const sz=Math.max(14,Math.min(CW,CH)*0.42);
+  for(const m of markers){
+    if(!m.ctrl) continue;
+    const flag = m.ctrl===1 ? FLAG1 : FLAG2;
+    const cx = padL + m.col*CW + CW/2;
+    const cy = padT + m.row*CH + CH/2;
+    const el=document.createElement('div');
+    el.className='fz';
+    el.style.left=(cx-sz*0.75)+'px';
+    el.style.top=(cy-sz*0.5)+'px';
+    el.style.width=(sz*1.5)+'px';
+    el.style.height=(sz)+'px';
+    el.innerHTML=flag;
+    overlay.appendChild(el);
+  }
+}
+
+function updateStatsBar(markers){
+  let z1=0,z2=0,disp=0;
+  markers.forEach(m=>{ if(m.ctrl===1) z1++; else if(m.ctrl===2) z2++; else disp++; });
+  document.getElementById('snHome').textContent = z1;
+  document.getElementById('snAway').textContent = z2;
+  document.getElementById('snDisp').textContent = disp;
+}
+
+function render(){
+  const cv = document.getElementById('cnv');
+  const wrap = cv.parentElement;
+  const W = wrap.clientWidth, H = Math.round(W/1.544);
+  cv.style.width=W+'px'; cv.style.height=H+'px';
+  cv.width=W*DPR; cv.height=H*DPR;
+  const ctx=cv.getContext('2d');
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(DPR,DPR);
+  const {pad,PW,PH}=drawPitch(ctx,W,H);
+  _markers=drawZones(ctx,pad,PW,PH);
+  placeFlags(_markers,pad.l,pad.t,PW,PH);
+  updateStatsBar(_markers);
+  reportHeight();
+}
+
+function reportHeight(){
+  const card=document.getElementById('card');
+  const h=Math.ceil(card.getBoundingClientRect().height);
+  if(window.parent===window) return;
+  window.parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
+  window.parent.postMessage({mmResize:true,height:h},'*');
+}
+
+const tt=document.getElementById('tt');
+document.getElementById('cnv').addEventListener('mousemove', e=>{
+  const cv=document.getElementById('cnv');
+  const rect=cv.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  const hit=_markers.find(m=>mx>=m.zx&&mx<=m.zx+m.zw&&my>=m.zy&&my<=m.zy+m.zh);
+  if(hit){
+    const ctrl = hit.ctrl===1?NAME1:hit.ctrl===2?NAME2:'Disputada';
+    tt.innerHTML=`<div class="tn">${ctrl}</div>
+      <div class="tr">${NAME1} ${(hit.p1*100).toFixed(0)}% · ${NAME2} ${(hit.p2*100).toFixed(0)}%</div>
+      <div class="tr">${hit.g1} vs ${hit.g2} toques</div>`;
+    tt.style.display='block'; tt.style.left=(e.clientX+14)+'px'; tt.style.top=(e.clientY-10)+'px';
+  } else tt.style.display='none';
+});
+document.getElementById('cnv').addEventListener('mouseleave', ()=>{ tt.style.display='none'; });
+document.getElementById('cnv').addEventListener('touchstart', e=>{
+  e.preventDefault(); e.stopPropagation();
+  const t=e.touches[0];
+  const cv=document.getElementById('cnv');
+  const rect=cv.getBoundingClientRect();
+  const mx=t.clientX-rect.left, my=t.clientY-rect.top;
+  const hit=_markers.find(m=>mx>=m.zx&&mx<=m.zx+m.zw&&my>=m.zy&&my<=m.zy+m.zh);
+  if(hit){
+    const ctrl = hit.ctrl===1?NAME1:hit.ctrl===2?NAME2:'Disputada';
+    tt.innerHTML=`<div class="tn">${ctrl}</div>
+      <div class="tr">${NAME1} ${(hit.p1*100).toFixed(0)}% · ${NAME2} ${(hit.p2*100).toFixed(0)}%</div>
+      <div class="tr">${hit.g1} vs ${hit.g2} toques</div>`;
+    if(tt.style.display==='block') tt.style.display='none';
+    else { tt.style.display='block'; tt.style.left=(t.clientX+14)+'px'; tt.style.top=(t.clientY-10)+'px'; }
+  } else tt.style.display='none';
+}, {passive:false});
+document.addEventListener('touchstart', e=>{ if(e.target.id!=='cnv') tt.style.display='none'; });
+
+render();
+let rt;
+window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(render,120); });
+</script>
+</body>
+</html>
