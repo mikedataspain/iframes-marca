@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secuencia del gol · Ferran Torres 105' · España 1-0 Argentina</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;background:#1a0638;font-family:'Segoe UI',Inter,system-ui,sans-serif}
+body{padding:0}
+#card{width:100%;max-width:720px;margin:0 auto;background:#260a52;border:1px solid #3d1070;border-radius:12px;overflow:hidden}
+
+/* HEADER */
+.hdr{padding:15px 20px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.hdr-left{display:flex;align-items:center;gap:12px;min-width:0}
+.flag-wrap{flex-shrink:0;width:clamp(28px,6.5vw,38px);height:auto;aspect-ratio:44/30;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.hti{min-width:0}
+.htitle{font-size:clamp(14px,3.8vw,18px);font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hsub{font-size:clamp(8px,1.9vw,10.5px);color:#4ae89a;letter-spacing:0.6px;text-transform:uppercase;margin-top:2px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-right{text-align:right;flex-shrink:0}
+.mcomp{font-size:clamp(7.5px,1.8vw,10px);color:#fff;letter-spacing:0.8px;text-transform:uppercase;opacity:.8;white-space:nowrap}
+.mextra{font-size:clamp(7px,1.6vw,9.5px);color:#fff;margin-top:2px;opacity:.6;white-space:nowrap}
+
+/* STATS */
+.sbar1{display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid #3d1070;border-bottom:1px solid #3d1070}
+.sbar2{display:grid;grid-template-columns:repeat(3,1fr);background:rgba(74,232,154,.08);border-bottom:1px solid #3d1070}
+.sbox{text-align:center;padding:9px 5px 8px;border-right:1px solid #3d1070}
+.sbox:last-child{border-right:none}
+.sv{font-size:clamp(11px,2.7vw,14px);font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sv.big{font-size:clamp(15px,3.6vw,19px)}
+.sl{font-size:clamp(7px,1.5vw,8.5px);color:#cc99ff;letter-spacing:0.6px;text-transform:uppercase;margin-top:3px}
+.sbar2 .sv{color:#4ae89a}
+
+/* PITCH */
+.cwrap{position:relative}
+canvas{display:block;width:100%}
+
+/* LEGEND */
+.legend{padding:10px 18px 12px;border-top:1px solid #3d1070;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:center}
+.li{display:flex;align-items:center;gap:6px;font-size:clamp(9px,2vw,10.5px);color:#fff;font-weight:600}
+.lline{width:22px;height:0;border-top:2.4px solid; flex-shrink:0}
+.lline.dashed{border-top-style:dashed}
+.ldot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+
+/* FOOTER */
+.card-footer{padding:5px 20px 13px;display:flex;justify-content:space-between;border-top:1px solid #3d1070}
+.cf-left,.cf-right{font-size:9px;letter-spacing:0.3px;color:#aaa}
+.cf-right{font-weight:600}
+
+/* TOOLTIP */
+#tt{position:fixed;display:none;background:rgba(20,4,48,.97);border:1px solid #3d1070;border-radius:8px;padding:8px 12px;pointer-events:none;z-index:200;min-width:140px}
+.tn{font-size:12px;font-weight:800}
+.tr{font-size:11px;color:#cc99ff;margin-top:2px}
+</style>
+</head>
+<body>
+<div id="card">
+
+  <div class="hdr">
+    <div class="hdr-left">
+      <svg class="flag-wrap" viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg">
+        <rect width="42" height="9"  y="0"  fill="#c60b1e"/>
+        <rect width="42" height="10" y="9"  fill="#ffc400"/>
+        <rect width="42" height="9"  y="19" fill="#c60b1e"/>
+      </svg>
+      <div class="hti">
+        <div class="htitle">España</div>
+        <div class="hsub">⚽ Secuencia del gol · min 105'</div>
+      </div>
+    </div>
+    <div class="hdr-right">
+      <div class="mcomp">Copa del Mundo 2026 · Final</div>
+      <div class="mextra">vs Argentina · 1-0 (prórroga) · MetLife Stadium</div>
+    </div>
+  </div>
+
+  <div class="sbar1">
+    <div class="sbox"><div class="sv">25 s</div><div class="sl">Duración</div></div>
+    <div class="sbox"><div class="sv">8</div><div class="sl">Jugadores</div></div>
+    <div class="sbox"><div class="sv">6</div><div class="sl">Pases</div></div>
+    <div class="sbox"><div class="sv" style="font-size:clamp(9.5px,2.3vw,12px)">Nico Williams</div><div class="sl">Asistente</div></div>
+    <div class="sbox"><div class="sv" style="font-size:clamp(9.5px,2.3vw,12px)">Ferran Torres</div><div class="sl">Finalizador</div></div>
+  </div>
+  <div class="sbar2">
+    <div class="sbox"><div class="sv">Izquierda</div><div class="sl">Pierna</div></div>
+    <div class="sbox"><div class="sv">10,2 m</div><div class="sl">Distancia</div></div>
+    <div class="sbox"><div class="sv">Centro-alto</div><div class="sl">Destino portería</div></div>
+  </div>
+
+  <div class="cwrap">
+    <canvas id="cnv"></canvas>
+  </div>
+
+  <div class="legend">
+    <div class="li"><div class="lline" style="border-color:#00e5ff"></div>Pase</div>
+    <div class="li"><div class="lline dashed" style="border-color:#c4b5fd"></div>Conducción</div>
+    <div class="li"><div class="lline" style="border-color:#b8930a"></div>Asistencia</div>
+    <div class="li"><div class="ldot" style="background:#4ae89a"></div>Gol</div>
+  </div>
+
+  <div class="card-footer">
+    <span class="cf-left">Datos: Opta Stats Perform</span>
+    <span class="cf-right">Miguel Ángel García</span>
+  </div>
+</div>
+
+<div id="tt"></div>
+
+<script>
+// ── SEQ: cadena cronológica 105:12 -> 105:37 (recuperación de Cucurella al gol) ──
+// Coordenadas Opta 0-100. España ataca DERECHA (coords tal cual, sin mirror).
+const SEQ = [
+  {kind:'carry', num:null, x1:6.8, y1:91.7, x2:7.6,  y2:87.7, player:'Marc Cucurella', min:'105:12'},
+  {kind:'pass',  num:1,    x1:7.6, y1:87.7, x2:22.2, y2:76.4, player:'Marc Cucurella', receiver:'Eric García', min:'105:16'},
+  {kind:'pass',  num:2,    x1:22.5,y1:74.4, x2:28.3, y2:37.1, player:'Eric García', receiver:'Pau Cubarsí', min:'105:19'},
+  {kind:'pass',  num:3,    x1:28.7,y1:36.2, x2:44.4, y2:31.4, player:'Pau Cubarsí', receiver:'Martín Zubimendi', min:'105:21'},
+  {kind:'carry', num:null, x1:44.4,y1:31.4, x2:63.2, y2:31.4, player:'Martín Zubimendi', min:'105:21-28'},
+  {kind:'pass',  num:4,    x1:63.2,y1:31.4, x2:74.8, y2:8.2,  player:'Martín Zubimendi', receiver:'Lamine Yamal', min:'105:28'},
+  {kind:'carry', num:null, x1:74.8,y1:8.2,  x2:83.3, y2:8.6,  player:'Lamine Yamal', min:'105:28-32'},
+  {kind:'pass',  num:5,    x1:83.3,y1:8.6,  x2:74.6, y2:22.4, player:'Lamine Yamal', receiver:'Pedro Porro', min:'105:32'},
+  {kind:'pass',  num:6,    x1:75.9,y1:22.6, x2:96.7, y2:59.1, player:'Pedro Porro', receiver:'Nico Williams', min:'105:34'},
+  {kind:'assist',num:7,    x1:97.9,y1:59.5, x2:91.2, y2:56.2, player:'Nico Williams', receiver:'Ferran Torres', min:'105:36'},
+  {kind:'goal',  num:null, x1:91.2,y1:56.2, x2:100,  y2:51.4, player:'Ferran Torres', min:'105:37'}
+];
+const C_PASS='#00e5ff', C_ASSIST='#b8930a', C_CARRY='#c4b5fd', C_GOAL='#4ae89a';
+
+const canvas = document.getElementById('cnv');
+const ctx = canvas.getContext('2d');
+const wrap = canvas.parentElement;
+const tt = document.getElementById('tt');
+const DPR = Math.min(window.devicePixelRatio||1, 2);
+const ASPECT = 1/1.544;
+
+let CW,CH,pad,PW,PH,hits=[];
+function FX(ox){ return pad.l + (ox/100)*PW; }
+function FY(oy){ return pad.t + ((100-oy)/100)*PH; }
+
+function computeGeometry(){
+  CW = wrap.clientWidth;
+  CH = Math.round(CW*ASPECT);
+  canvas.style.width=CW+'px'; canvas.style.height=CH+'px';
+  canvas.width=CW*DPR; canvas.height=CH*DPR;
+  ctx.setTransform(1,0,0,1,0,0); ctx.scale(DPR,DPR);
+  const s = CW/684;
+  pad = {l:16*s, r:16*s, t:12*s, b:12*s};
+  PW = CW-pad.l-pad.r; PH = CH-pad.t-pad.b;
+}
+
+function drawPitch(){
+  const bg = ctx.createLinearGradient(0,0,CW,0);
+  bg.addColorStop(0,'#1a0638'); bg.addColorStop(.5,'#260a52'); bg.addColorStop(1,'#1a0638');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,CW,CH);
+  const pg = ctx.createLinearGradient(pad.l,0,pad.l+PW,0);
+  pg.addColorStop(0,'#190637'); pg.addColorStop(.5,'#1e0840'); pg.addColorStop(1,'#190637');
+  ctx.fillStyle=pg; ctx.fillRect(pad.l,pad.t,PW,PH);
+
+  const ns=16, sw=PW/ns;
+  ctx.fillStyle='rgba(255,255,255,0.022)';
+  for(let i=0;i<ns;i+=2) ctx.fillRect(pad.l+i*sw, pad.t, sw, PH);
+
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=0.8;
+  ctx.strokeRect(pad.l,pad.t,PW,PH);
+  ctx.beginPath(); ctx.moveTo(FX(50),pad.t); ctx.lineTo(FX(50),pad.t+PH); ctx.stroke();
+  ctx.beginPath(); ctx.arc(FX(50),FY(50),2,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.fill();
+  const cR = Math.max(1,(9.15/68)*PH);
+  ctx.beginPath(); ctx.arc(FX(50),FY(50),cR,0,Math.PI*2); ctx.stroke();
+
+  ctx.strokeRect(FX(0),FY(78.9),FX(16.5)-FX(0),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(83.5),FY(78.9),FX(100)-FX(83.5),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(0),FY(63.2),FX(5.8)-FX(0),FY(36.8)-FY(63.2));
+  ctx.strokeRect(FX(94.2),FY(63.2),FX(100)-FX(94.2),FY(36.8)-FY(63.2));
+
+  const gT=FY(54.7), gB=FY(45.3), gD=Math.max(4,PW*.012);
+  ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.4;
+  ctx.strokeRect(pad.l-gD,gT,gD,gB-gT); ctx.strokeRect(pad.l+PW,gT,gD,gB-gT);
+
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=0.8;
+  const penArcR = Math.max(1,(9.15/68)*PH);
+  ctx.save(); ctx.beginPath(); ctx.rect(FX(16.5),pad.t,PW-(FX(16.5)-pad.l),PH); ctx.clip();
+  ctx.beginPath(); ctx.arc(FX(11.5),FY(50),penArcR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(pad.l,pad.t,FX(83.5)-pad.l,PH); ctx.clip();
+  ctx.beginPath(); ctx.arc(FX(88.5),FY(50),penArcR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+
+  const cRc = Math.max(2,PH*.02);
+  [[pad.l,pad.t,0,Math.PI/2],[pad.l,pad.t+PH,-Math.PI/2,0],
+   [pad.l+PW,pad.t,Math.PI/2,Math.PI],[pad.l+PW,pad.t+PH,Math.PI,3*Math.PI/2]].forEach(([x,y,a1,a2])=>{
+    ctx.save(); ctx.beginPath(); ctx.rect(x-cRc*1.5,y-cRc*1.5,cRc*3,cRc*3); ctx.clip();
+    ctx.beginPath(); ctx.arc(x,y,cRc,a1,a2); ctx.stroke(); ctx.restore();
+  });
+}
+
+function drawArrow(x1,y1,x2,y2,color,dashed,lw){
+  const dx=x2-x1, dy=y2-y1, len=Math.hypot(dx,dy);
+  if(len<1) return;
+  const ux=dx/len, uy=dy/len;
+  const hLen = 9;
+  const ex=x2-ux*hLen, ey=y2-uy*hLen;
+  const ang=Math.atan2(dy,dx);
+  ctx.save();
+  ctx.strokeStyle=color; ctx.lineWidth=lw;
+  ctx.setLineDash(dashed?[5,4]:[]);
+  ctx.globalAlpha = dashed?0.85:0.92;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(ex,ey); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=color;
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-hLen*Math.cos(ang-0.42), y2-hLen*Math.sin(ang-0.42));
+  ctx.lineTo(x2-hLen*0.55*Math.cos(ang), y2-hLen*0.55*Math.sin(ang));
+  ctx.lineTo(x2-hLen*Math.cos(ang+0.42), y2-hLen*Math.sin(ang+0.42));
+  ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+function drawSequence(){
+  hits=[];
+  const s = CW/684;
+  SEQ.forEach(ev=>{
+    const x1=FX(ev.x1), y1=FY(ev.y1), x2=FX(ev.x2), y2=FY(ev.y2);
+    let color, dashed=false, lw=2*s;
+    if(ev.kind==='pass'){ color=C_PASS; }
+    else if(ev.kind==='assist'){ color=C_ASSIST; lw=2.4*s; }
+    else if(ev.kind==='carry'){ color=C_CARRY; dashed=true; lw=1.8*s; }
+    else if(ev.kind==='goal'){ color=C_GOAL; lw=2.6*s; }
+    drawArrow(x1,y1,x2,y2,color,dashed,lw);
+
+    // small origin dot for continuity (skip for goal, it reuses previous node)
+    if(ev.kind!=='goal'){
+      ctx.beginPath(); ctx.arc(x1,y1,3*s,0,Math.PI*2);
+      ctx.fillStyle=color+'aa'; ctx.fill();
+    }
+
+    // destination node
+    if(ev.kind==='goal'){
+      const r=10*s;
+      const g = ctx.createRadialGradient(x2,y2,0,x2,y2,r*3);
+      g.addColorStop(0,C_GOAL+'66'); g.addColorStop(1,C_GOAL+'00');
+      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x2,y2,r*3,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(x2,y2,r,0,Math.PI*2);
+      ctx.fillStyle='rgba(74,232,154,.25)'; ctx.fill();
+      ctx.strokeStyle=C_GOAL; ctx.lineWidth=2.2; ctx.stroke();
+      ctx.beginPath(); ctx.arc(x2,y2,r+3*s,0,Math.PI*2);
+      ctx.strokeStyle=C_GOAL+'88'; ctx.lineWidth=1.2; ctx.stroke();
+      ctx.font=`${Math.max(11,13*s)}px 'Segoe UI',Inter,sans-serif`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle='#ffffff'; ctx.fillText('⚽', x2, y2+0.5);
+      hits.push({x:x2,y:y2,r:Math.max(r,12*s),data:ev});
+    } else if(ev.num !== null){
+      const r=8*s;
+      ctx.beginPath(); ctx.arc(x2,y2,r,0,Math.PI*2);
+      ctx.fillStyle=color; ctx.fill();
+      ctx.strokeStyle='#ffffff'; ctx.lineWidth=1.3; ctx.stroke();
+      ctx.font=`800 ${Math.max(10,11*s)}px 'Segoe UI',Inter,sans-serif`;
+      ctx.textAlign='center'; ctx.textBaseline='middle';
+      ctx.fillStyle='#1a0638'; ctx.fillText(String(ev.num), x2, y2+0.5);
+      hits.push({x:x2,y:y2,r:Math.max(r,11*s),data:ev});
+    } else {
+      // carry endpoint small dot
+      ctx.beginPath(); ctx.arc(x2,y2,4*s,0,Math.PI*2);
+      ctx.fillStyle=color; ctx.fill();
+      hits.push({x:x2,y:y2,r:Math.max(9*s,10),data:ev});
+    }
+  });
+
+  // origin marker (recovery point)
+  const first = SEQ[0];
+  const ox=FX(first.x1), oy=FY(first.y1);
+  ctx.beginPath(); ctx.arc(ox,oy,5*s,0,Math.PI*2);
+  ctx.strokeStyle='#ffffff'; ctx.lineWidth=1.3; ctx.setLineDash([2,2]);
+  ctx.stroke(); ctx.setLineDash([]);
+  hits.push({x:ox,y:oy,r:10*s,data:{kind:'recovery',player:first.player,min:first.min}});
+}
+
+function render(){
+  computeGeometry();
+  drawPitch();
+  drawSequence();
+  reportHeight();
+}
+function reportHeight(){
+  const card=document.getElementById('card');
+  const h=Math.ceil(card.getBoundingClientRect().height);
+  if(window.parent===window) return;
+  window.parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
+  window.parent.postMessage({mmResize:true,height:h},'*');
+}
+
+function findHit(cx,cy){
+  for(const h of hits){
+    const dx=cx-h.x, dy=cy-h.y;
+    if(dx*dx+dy*dy<=h.r*h.r) return h;
+  }
+  return null;
+}
+function labelFor(d){
+  if(d.kind==='recovery') return {title:`Recuperación · ${d.player}`, sub:`min ${d.min}`, color:'#ffffff'};
+  if(d.kind==='pass') return {title:`Pase de ${d.player}`, sub:`a ${d.receiver} · min ${d.min}`, color:C_PASS};
+  if(d.kind==='assist') return {title:`Asistencia · ${d.player}`, sub:`a ${d.receiver} · min ${d.min}`, color:C_ASSIST};
+  if(d.kind==='carry') return {title:`Conducción · ${d.player}`, sub:`min ${d.min}`, color:C_CARRY};
+  if(d.kind==='goal') return {title:`⚽ GOL · ${d.player}`, sub:`min ${d.min} · pierna izquierda`, color:C_GOAL};
+}
+function showTT(d,px,py){
+  const info = labelFor(d);
+  tt.innerHTML = `<div class="tn" style="color:${info.color}">${info.title}</div><div class="tr">${info.sub}</div>`;
+  tt.style.display='block'; tt.style.left='0'; tt.style.top='0';
+  const tw=tt.offsetWidth, th=tt.offsetHeight;
+  const ml=window.innerWidth-tw-8, mt=window.innerHeight-th-8;
+  tt.style.left=Math.max(6,Math.min(px+14,ml))+'px';
+  tt.style.top=Math.max(6,Math.min(py-24,mt))+'px';
+}
+canvas.addEventListener('mousemove', e=>{
+  const r=canvas.getBoundingClientRect();
+  const h=findHit(e.clientX-r.left,e.clientY-r.top);
+  if(h){ canvas.style.cursor='pointer'; showTT(h.data,e.clientX,e.clientY); }
+  else { canvas.style.cursor='default'; tt.style.display='none'; }
+});
+canvas.addEventListener('mouseleave', ()=>{ tt.style.display='none'; });
+canvas.addEventListener('touchstart', e=>{
+  e.preventDefault(); e.stopPropagation();
+  const t=e.touches[0];
+  const r=canvas.getBoundingClientRect();
+  const h=findHit(t.clientX-r.left,t.clientY-r.top);
+  if(h){ if(tt.style.display==='block') tt.style.display='none'; else showTT(h.data,t.clientX,t.clientY); }
+  else tt.style.display='none';
+}, {passive:false});
+document.addEventListener('touchstart', e=>{ if(e.target!==canvas) tt.style.display='none'; });
+
+render();
+let rt;
+window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(render,120); });
+</script>
+</body>
+</html>
