@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa de tiros · resumen · España 1-0 Argentina</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;background:#1a0638;font-family:'Segoe UI',Inter,system-ui,sans-serif}
+body{padding:0}
+#card{width:100%;max-width:720px;margin:0 auto;background:#260a52;border:1px solid #3d1070;border-radius:12px;overflow:hidden}
+
+/* HEADER — grid 1fr auto 1fr */
+.hdr{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:16px 20px 12px;gap:8px}
+.team-side{display:flex;align-items:center;gap:10px;min-width:0}
+.team-side.right{flex-direction:row-reverse;text-align:right}
+.flag-wrap{flex-shrink:0;width:clamp(26px,6.5vw,38px);height:auto;aspect-ratio:44/30;border-radius:2px;box-shadow:0 0 0 1px rgba(255,255,255,.1)}
+.flag-wrap img{width:100%;height:100%;object-fit:cover;display:block;border-radius:2px}
+.team-name{font-size:clamp(12px,3.4vw,16px);font-weight:800;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.team-tag{font-size:clamp(7px,1.6vw,9px);color:#cc99ff;letter-spacing:0.6px;text-transform:uppercase;margin-top:1px}
+.score-mid{text-align:center;flex-shrink:0}
+.score-num{font-size:clamp(22px,6.5vw,34px);font-weight:900;color:#fff;line-height:1;white-space:nowrap}
+.score-note{font-size:clamp(7px,1.6vw,9px);color:#cc99ff;font-weight:600;white-space:nowrap;margin-top:2px}
+.comp-sub{text-align:center;font-size:clamp(8px,1.9vw,10px);color:#cc99ff;letter-spacing:0.5px;text-transform:uppercase;padding-bottom:12px;border-bottom:1px solid #3d1070;opacity:.85}
+
+/* MODULE — scorers | stats | scorers */
+.module{display:grid;grid-template-columns:1fr 160px 1fr;border-bottom:1px solid #3d1070}
+.scorers{padding:12px 14px;display:flex;flex-direction:column;justify-content:center;gap:6px}
+.scorers.right{align-items:flex-end;text-align:right}
+.scorer-row{display:flex;align-items:center;gap:6px;font-size:clamp(10px,2.4vw,12px);color:#fff;font-weight:600}
+.scorers.right .scorer-row{flex-direction:row-reverse}
+.scorer-min{color:#4ae89a;font-weight:800;flex-shrink:0}
+.scorer-empty{font-size:11px;color:#9966cc;font-style:italic}
+.stats-table{border-left:1px solid #3d1070;border-right:1px solid #3d1070;display:flex;flex-direction:column}
+.stat-row{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:6px 10px;gap:6px}
+.stat-row:not(:last-child){border-bottom:1px solid #3d1070}
+.stat-v{font-size:clamp(13px,3.2vw,16px);font-weight:800;color:#00e5ff;text-align:right}
+.stat-v.away{color:#ff1493;text-align:left}
+.stat-l{font-size:clamp(7.5px,1.7vw,9px);color:#cc99ff;text-transform:uppercase;letter-spacing:0.4px;text-align:center;white-space:nowrap}
+
+/* PITCH */
+.cwrap{position:relative}
+canvas{display:block;width:100%}
+
+/* LEGEND */
+.legend{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;padding:10px 12px 8px}
+.li{display:flex;align-items:center;gap:6px}
+.ld{width:11px;height:11px;border-radius:50%;flex-shrink:0}
+.lt{font-size:clamp(8.5px,2vw,10.5px);color:#fff;letter-spacing:0.2px}
+
+/* TOOLTIP */
+#tt{position:fixed;display:none;background:rgba(20,4,48,.97);border:1px solid #3d1070;border-radius:8px;padding:8px 12px;pointer-events:none;z-index:200}
+.tn{font-size:12px;font-weight:700}
+.tr{font-size:11px;color:#cc99ff;margin-top:2px}
+
+/* FOOTER */
+.card-footer{padding:5px 20px 13px;display:flex;justify-content:space-between;border-top:1px solid #3d1070}
+.cf-left,.cf-right{font-size:9px;letter-spacing:0.3px;color:#aaa}
+.cf-right{font-weight:600}
+</style>
+</head>
+<body>
+<div id="card">
+
+  <div class="hdr">
+    <div class="team-side">
+      <div class="flag-wrap">
+        <svg viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;border-radius:2px">
+          <rect width="42" height="9"  y="0"  fill="#c60b1e"/>
+          <rect width="42" height="10" y="9"  fill="#ffc400"/>
+          <rect width="42" height="9"  y="19" fill="#c60b1e"/>
+        </svg>
+      </div>
+      <div>
+        <div class="team-name">España</div>
+        <div class="team-tag">Local</div>
+      </div>
+    </div>
+    <div class="score-mid">
+      <div class="score-num">1-0</div>
+      <div class="score-note">Prórroga</div>
+    </div>
+    <div class="team-side right">
+      <div class="flag-wrap">
+        <svg viewBox="0 0 42 28" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;display:block;border-radius:2px">
+          <rect width="42" height="28" fill="#FFFFFF"/>
+          <rect width="42" height="9"  y="0"  fill="#75AADB"/>
+          <rect width="42" height="9"  y="19" fill="#75AADB"/>
+          <circle cx="21" cy="14" r="3.4" fill="#FCBF49" stroke="#85340A" stroke-width="0.4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="team-name">Argentina</div>
+        <div class="team-tag">Visitante</div>
+      </div>
+    </div>
+  </div>
+  <div class="comp-sub">Copa del Mundo 2026 · Final · MetLife Stadium</div>
+
+  <div class="module">
+    <div class="scorers" id="scorersHome"></div>
+    <div class="stats-table" id="statsTable"></div>
+    <div class="scorers right" id="scorersAway"></div>
+  </div>
+
+  <div class="cwrap">
+    <canvas id="cnv"></canvas>
+  </div>
+
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:#4ae89a"></div><span class="lt">Gol</span></div>
+    <div class="li"><div class="ld" style="background:#e8374e"></div><span class="lt">Parado</span></div>
+    <div class="li"><div class="ld" style="background:#FF8C00"></div><span class="lt">Fuera</span></div>
+    <div class="li"><div class="ld" style="background:#508cff"></div><span class="lt">Palo</span></div>
+  </div>
+
+  <div class="card-footer">
+    <span class="cf-left">Datos: Opta Stats Perform</span>
+    <span class="cf-right">Miguel Ángel García</span>
+  </div>
+</div>
+
+<div id="tt"></div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────
+const SHOTS = {
+  home: [{"min":4,"x":93.6,"y":32.3,"result":"saved","player":"Lamine Yamal"},{"min":38,"x":81.1,"y":46.0,"result":"saved","player":"Mikel Oyarzabal"},{"min":42,"x":80.0,"y":74.4,"result":"miss","player":"Marc Cucurella"},{"min":45,"x":80.0,"y":59.9,"result":"saved","player":"Álex Baena"},{"min":60,"x":76.4,"y":26.5,"result":"saved","player":"Lamine Yamal"},{"min":63,"x":75.7,"y":47.9,"result":"saved","player":"Dani Olmo"},{"min":64,"x":94.8,"y":46.6,"result":"saved","player":"Dani Olmo"},{"min":66,"x":91.9,"y":45.0,"result":"saved","player":"Ferran Torres"},{"min":76,"x":81.8,"y":53.6,"result":"saved","player":"Pedri"},{"min":76,"x":78.5,"y":28.0,"result":"saved","player":"Pau Cubarsí"},{"min":80,"x":93.3,"y":55.2,"result":"saved","player":"Aymeric Laporte"},{"min":86,"x":88.3,"y":40.1,"result":"miss","player":"Ferran Torres"},{"min":88,"x":71.8,"y":45.2,"result":"miss","player":"Rodri"},{"min":92,"x":84.2,"y":29.4,"result":"saved","player":"Nico Williams"},{"min":97,"x":76.0,"y":53.0,"result":"saved","player":"Lamine Yamal"},{"min":92,"x":92.4,"y":51.1,"result":"saved","player":"Nico Williams"},{"min":100,"x":78.1,"y":32.3,"result":"miss","player":"Lamine Yamal"},{"min":102,"x":92.5,"y":50.7,"result":"miss","player":"Mikel Merino"},{"min":103,"x":73.8,"y":56.8,"result":"saved","player":"Nico Williams"},{"min":105,"x":91.2,"y":56.2,"result":"goal","player":"Ferran Torres"}],
+  away: [{"min":116,"x":80.0,"y":32.1,"result":"saved","player":"L. Messi"},{"min":121,"x":90.8,"y":47.6,"result":"miss","player":"G. Simeone"}]
+};
+const NAME_HOME='España', NAME_AWAY='Argentina';
+const RESULT_LABEL={goal:'GOL ⚽',saved:'Parado',miss:'Fuera',post:'Palo',blocked:'Bloqueado'};
+const FILL   = {goal:'rgba(74,232,154,.22)', saved:'rgba(232,55,78,.20)', miss:'rgba(255,140,0,.18)',  post:'rgba(80,140,255,.20)', blocked:'rgba(220,220,240,.12)'};
+const STROKE = {goal:'#4ae89a', saved:'#e8374e', miss:'#FF8C00', post:'#508cff', blocked:'rgba(200,200,220,.7)'};
+const RADIUS = {goal:6, saved:5, miss:5, post:5, blocked:4};
+
+// ── STATS TABLE ──────────────────────────────────────────────────────────
+function computeStats(list){
+  const total = list.length;
+  const onTarget = list.filter(s=>s.result==='saved'||s.result==='goal').length;
+  const off = list.filter(s=>s.result==='miss'||s.result==='post').length;
+  const goals = list.filter(s=>s.result==='goal').length;
+  return {total, onTarget, off, goals};
+}
+const statsHome = computeStats(SHOTS.home);
+const statsAway = computeStats(SHOTS.away);
+
+document.getElementById('statsTable').innerHTML = `
+  <div class="stat-row"><div class="stat-v">${statsHome.total}</div><div class="stat-l">Tiros</div><div class="stat-v away">${statsAway.total}</div></div>
+  <div class="stat-row"><div class="stat-v">${statsHome.onTarget}</div><div class="stat-l">A puerta</div><div class="stat-v away">${statsAway.onTarget}</div></div>
+  <div class="stat-row"><div class="stat-v">${statsHome.off}</div><div class="stat-l">Fuera</div><div class="stat-v away">${statsAway.off}</div></div>
+`;
+
+// ── SCORERS ───────────────────────────────────────────────────────────────
+function renderScorers(el, list, align){
+  const goals = list.filter(s=>s.result==='goal');
+  if(!goals.length){ el.innerHTML = '<div class="scorer-empty">Sin goles</div>'; return; }
+  el.innerHTML = goals.map(g=>`<div class="scorer-row"><span class="scorer-min">${g.min}'</span><span>${g.player}</span></div>`).join('');
+}
+renderScorers(document.getElementById('scorersHome'), SHOTS.home);
+renderScorers(document.getElementById('scorersAway'), SHOTS.away);
+
+// ── CANVAS SETUP ──────────────────────────────────────────────────────────
+const canvas = document.getElementById('cnv');
+const ctx = canvas.getContext('2d');
+const wrap = canvas.parentElement;
+const tt = document.getElementById('tt');
+const DPR = Math.min(window.devicePixelRatio||1, 2);
+const ASPECT = 1/1.544;
+
+let CW, CH, pad, PW, PH;
+let hits = [];
+
+function FX(ox){ return pad.l + (ox/100)*PW; }
+function FY(oy){ return pad.t + ((100-oy)/100)*PH; }
+
+function computeGeometry(){
+  CW = wrap.clientWidth;
+  CH = Math.round(CW*ASPECT);
+  canvas.style.width = CW+'px';
+  canvas.style.height = CH+'px';
+  canvas.width = CW*DPR;
+  canvas.height = CH*DPR;
+  ctx.setTransform(1,0,0,1,0,0);
+  ctx.scale(DPR,DPR);
+  const s = CW/684;
+  pad = {l:16*s, r:16*s, t:10*s, b:10*s};
+  PW = CW-pad.l-pad.r;
+  PH = CH-pad.t-pad.b;
+}
+
+function drawPitch(){
+  const bg = ctx.createLinearGradient(0,0,CW,0);
+  bg.addColorStop(0,'#1a0638'); bg.addColorStop(.5,'#260a52'); bg.addColorStop(1,'#1a0638');
+  ctx.fillStyle = bg; ctx.fillRect(0,0,CW,CH);
+
+  const pg = ctx.createLinearGradient(pad.l,0,pad.l+PW,0);
+  pg.addColorStop(0,'#190637'); pg.addColorStop(.5,'#1e0840'); pg.addColorStop(1,'#190637');
+  ctx.fillStyle = pg; ctx.fillRect(pad.l,pad.t,PW,PH);
+
+  const ns=16, sw=PW/ns;
+  ctx.fillStyle='rgba(255,255,255,0.022)';
+  for(let i=0;i<ns;i+=2) ctx.fillRect(pad.l+i*sw, pad.t, sw, PH);
+
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=0.8;
+  ctx.strokeRect(pad.l,pad.t,PW,PH);
+  ctx.beginPath(); ctx.moveTo(FX(50),pad.t); ctx.lineTo(FX(50),pad.t+PH); ctx.stroke();
+  ctx.beginPath(); ctx.arc(FX(50),FY(50),2,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.fill();
+
+  const cR = Math.max(1,(9.15/68)*PH);
+  ctx.beginPath(); ctx.arc(FX(50),FY(50),cR,0,Math.PI*2); ctx.stroke();
+
+  // penalty & 6-yard boxes both sides
+  ctx.strokeRect(FX(0),FY(78.9),FX(16.5)-FX(0),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(83.5),FY(78.9),FX(100)-FX(83.5),FY(21.1)-FY(78.9));
+  ctx.strokeRect(FX(0),FY(63.2),FX(5.8)-FX(0),FY(36.8)-FY(63.2));
+  ctx.strokeRect(FX(94.2),FY(63.2),FX(100)-FX(94.2),FY(36.8)-FY(63.2));
+
+  const gT=FY(54.7), gB=FY(45.3), gD=Math.max(4,PW*.012);
+  ctx.strokeStyle='rgba(255,255,255,0.35)'; ctx.lineWidth=1.4;
+  ctx.strokeRect(pad.l-gD,gT,gD,gB-gT);
+  ctx.strokeRect(pad.l+PW,gT,gD,gB-gT);
+
+  ctx.strokeStyle='rgba(255,255,255,0.18)'; ctx.lineWidth=0.8;
+  [FX(11.5),FX(88.5)].forEach(x=>{ ctx.beginPath(); ctx.arc(x,FY(50),1.5,0,Math.PI*2); ctx.fillStyle='rgba(255,255,255,0.18)'; ctx.fill(); });
+
+  const penArcR = Math.max(1,(9.15/68)*PH);
+  ctx.save(); ctx.beginPath(); ctx.rect(FX(16.5),pad.t,PW-(FX(16.5)-pad.l),PH); ctx.clip();
+  ctx.beginPath(); ctx.arc(FX(11.5),FY(50),penArcR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+  ctx.save(); ctx.beginPath(); ctx.rect(pad.l,pad.t,FX(83.5)-pad.l,PH); ctx.clip();
+  ctx.beginPath(); ctx.arc(FX(88.5),FY(50),penArcR,0,Math.PI*2); ctx.stroke(); ctx.restore();
+
+  const cRc = Math.max(2,PH*.02);
+  [[pad.l,pad.t,0,Math.PI/2],[pad.l,pad.t+PH,-Math.PI/2,0],
+   [pad.l+PW,pad.t,Math.PI/2,Math.PI],[pad.l+PW,pad.t+PH,Math.PI,3*Math.PI/2]].forEach(([x,y,a1,a2])=>{
+    ctx.save(); ctx.beginPath(); ctx.rect(x-cRc*1.5,y-cRc*1.5,cRc*3,cRc*3); ctx.clip();
+    ctx.beginPath(); ctx.arc(x,y,cRc,a1,a2); ctx.stroke(); ctx.restore();
+  });
+}
+
+function drawShots(){
+  hits = [];
+  const s = CW/684;
+  // HOME (España) — mirrored: attacks LEFT
+  SHOTS.home.forEach(sh=>{
+    const x = FX(100-sh.x), y = FY(100-sh.y);
+    drawMarker(x,y,sh,s);
+  });
+  // AWAY (Argentina) — normal coords: attacks RIGHT
+  SHOTS.away.forEach(sh=>{
+    const x = FX(sh.x), y = FY(sh.y);
+    drawMarker(x,y,sh,s);
+  });
+}
+
+function drawMarker(x,y,sh,s){
+  const r = RADIUS[sh.result]*s;
+  if(sh.result==='goal' || sh.result==='saved'){
+    const g = ctx.createRadialGradient(x,y,0,x,y,r*2.8);
+    g.addColorStop(0, STROKE[sh.result]+'55');
+    g.addColorStop(1, STROKE[sh.result]+'00');
+    ctx.fillStyle=g; ctx.beginPath(); ctx.arc(x,y,r*2.8,0,Math.PI*2); ctx.fill();
+  }
+  ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2);
+  ctx.fillStyle = FILL[sh.result]; ctx.fill();
+  ctx.strokeStyle = STROKE[sh.result]; ctx.lineWidth = 1.6; ctx.stroke();
+  if(sh.result==='goal'){
+    ctx.strokeStyle='#ffffff'; ctx.lineWidth=1.5;
+    ctx.beginPath();
+    ctx.moveTo(x-r*0.45,y);
+    ctx.lineTo(x-r*0.1,y+r*0.4);
+    ctx.lineTo(x+r*0.5,y-r*0.4);
+    ctx.stroke();
+  }
+  hits.push({x,y,r:Math.max(r,10*s),data:sh});
+}
+
+function render(){
+  computeGeometry();
+  drawPitch();
+  drawShots();
+  reportHeight();
+}
+
+function reportHeight(){
+  const card=document.getElementById('card');
+  const h=Math.ceil(card.getBoundingClientRect().height);
+  if(window.parent===window) return;
+  window.parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
+  window.parent.postMessage({mmResize:true,height:h},'*');
+}
+
+function findHit(cx,cy){
+  for(const h of hits){
+    const dx=cx-h.x, dy=cy-h.y;
+    if(dx*dx+dy*dy<=h.r*h.r) return h;
+  }
+  return null;
+}
+function showTT(d,px,py){
+  tt.innerHTML = `<div class="tn" style="color:${STROKE[d.result]}">${d.player}</div><div class="tr">${RESULT_LABEL[d.result]} · min ${d.min}'</div>`;
+  tt.style.display='block'; tt.style.left='0'; tt.style.top='0';
+  const tw=tt.offsetWidth, th=tt.offsetHeight;
+  const ml=window.innerWidth-tw-8, mt=window.innerHeight-th-8;
+  tt.style.left=Math.max(6,Math.min(px+14,ml))+'px';
+  tt.style.top=Math.max(6,Math.min(py-24,mt))+'px';
+}
+canvas.addEventListener('mousemove', e=>{
+  const r=canvas.getBoundingClientRect();
+  const h=findHit(e.clientX-r.left,e.clientY-r.top);
+  if(h){ canvas.style.cursor='pointer'; showTT(h.data,e.clientX,e.clientY); }
+  else { canvas.style.cursor='default'; tt.style.display='none'; }
+});
+canvas.addEventListener('mouseleave', ()=>{ tt.style.display='none'; });
+canvas.addEventListener('touchstart', e=>{
+  e.preventDefault(); e.stopPropagation();
+  const t=e.touches[0];
+  const r=canvas.getBoundingClientRect();
+  const h=findHit(t.clientX-r.left,t.clientY-r.top);
+  if(h){ if(tt.style.display==='block') tt.style.display='none'; else showTT(h.data,t.clientX,t.clientY); }
+  else tt.style.display='none';
+}, {passive:false});
+document.addEventListener('touchstart', e=>{ if(e.target!==canvas) tt.style.display='none'; });
+
+render();
+let rt;
+window.addEventListener('resize', ()=>{ clearTimeout(rt); rt=setTimeout(render,120); });
+</script>
+</body>
+</html>
