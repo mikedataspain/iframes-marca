@@ -25,12 +25,12 @@ body.png{background:transparent;padding:0}
 .score img{height:30px;width:auto;display:block}
 .score span{font-size:30px;font-weight:800;color:var(--ink);letter-spacing:1px;line-height:1;font-variant-numeric:tabular-nums}
 .mi{font-size:12px;font-weight:500;color:var(--ink);text-align:right}
-.sbar{display:grid;grid-template-columns:repeat(5,1fr);border-bottom:1px solid var(--div)}
+.sbar{display:grid;grid-template-columns:1fr 1fr 1fr 1.5fr 1.5fr;border-bottom:1px solid var(--div)}
 .sbar.r2{grid-template-columns:repeat(3,1fr);background:rgba(var(--goalrgb),.09)}
 .sbox{padding:13px 8px 12px;text-align:center;border-right:1px solid var(--div);min-width:0}
 .sbox:last-child{border-right:0}
-.sn{font-size:23px;font-weight:800;line-height:1.1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sbar.r2 .sn{font-size:19px}
+.sn{font-size:clamp(15px,3.2vw,20px);font-weight:800;line-height:1.1;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sbar.r2 .sn{font-size:clamp(14px,3vw,17px)}
 .sl{font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--lab);margin-top:5px}
 .cwrap{position:relative;background:var(--pitchbg)}
 canvas{display:block;width:100%}
@@ -54,7 +54,7 @@ canvas{display:block;width:100%}
   .sbar{grid-template-columns:repeat(3,1fr)}
   .sbar .sbox:nth-child(3){border-right:0}
   .sbar .sbox:nth-child(n+4){border-top:1px solid var(--div)}
-  .sn{font-size:19px}.sbar.r2 .sn{font-size:16px}
+  .sn{font-size:clamp(14px,4.2vw,17px)}.sbar.r2 .sn{font-size:clamp(13px,3.8vw,15px)}
   .legend{padding:10px 16px;gap:6px 16px}.card-footer{padding:7px 16px 12px}
 }
 </style>
@@ -104,6 +104,17 @@ document.getElementById('sb1').innerHTML =
   box(S.assistShort, 'Asistente', T.assistText || T.assist) + box(S.scorerShort, 'Finalizador', T.goalText || T.goal);
 document.getElementById('sb2').innerHTML =
   box(S.foot, 'Pierna', T.goalText || T.goal) + box(S.dist + ' m', 'Distancia', T.goalText || T.goal) + box(S.dest, 'Destino portería', T.goalText || T.goal);
+/* encoge el texto de cada caja justo lo necesario para que quepa entero (sin '…') */
+function fitStats(){
+  document.querySelectorAll('.sn').forEach(el => {
+    el.style.fontSize = '';
+    let fs = parseFloat(getComputedStyle(el).fontSize);
+    while (el.scrollWidth > el.clientWidth && fs > 11) { fs -= 0.5; el.style.fontSize = fs + 'px'; }
+  });
+}
+fitStats();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitStats);
+window.addEventListener('resize', fitStats);
 
 /* ---------- canvas ---------- */
 const cv = document.getElementById('cv'), ctx = cv.getContext('2d'), cw = document.getElementById('cw'), tt = document.getElementById('tt');
