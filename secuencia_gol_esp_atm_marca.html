@@ -156,10 +156,9 @@ function drawPitch() {
     ctx.strokeRect(side ? x0 - mx(16.5) : x0, cy - mx(20.16), mx(16.5), mx(40.32));      // área grande
     ctx.strokeRect(side ? x0 - mx(5.5) : x0, cy - mx(9.16), mx(5.5), mx(18.32));        // área pequeña
     ctx.beginPath(); ctx.arc(x0 + dir * mx(11), cy, Math.max(1, 1.8), 0, Math.PI * 2); ctx.fill(); // punto de penalti
-    // arco del área: sólo la parte exterior al área
-    ctx.save(); ctx.beginPath();
-    if (side) ctx.rect(pad.l, pad.t, PW - mx(16.5), PH); else ctx.rect(pad.l + mx(16.5), pad.t, PW - mx(16.5), PH);
-    ctx.clip(); ctx.beginPath(); ctx.arc(x0 + dir * mx(11), cy, Math.max(1, mx(9.15)), 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    // arco del área: sólo el tramo exterior al área, calculado (sin clip: igual en todos los navegadores)
+    { const th = Math.acos((16.5 - 11) / 9.15), a0 = side ? Math.PI - th : -th, a1 = side ? Math.PI + th : th;
+      ctx.beginPath(); ctx.arc(x0 + dir * mx(11), cy, Math.max(1, mx(9.15)), a0, a1); ctx.stroke(); }
     // portería
     ctx.save(); ctx.strokeStyle = T.goals; ctx.lineWidth = 1.8;
     ctx.strokeRect(side ? x0 : x0 - mx(2.44), cy - mx(3.66), mx(2.44), mx(7.32)); ctx.restore();
