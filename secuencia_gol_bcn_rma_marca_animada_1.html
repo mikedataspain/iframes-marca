@@ -26,8 +26,8 @@ body{font-family:Inter,"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-seri
 .sttl{padding:10px 24px 0;display:flex;align-items:baseline;justify-content:space-between;gap:8px;border-top:1px solid var(--div)}
 .sttl .t{font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:var(--acc)}
 .sttl .m{font-size:11px;font-weight:600;color:var(--tp)}
-.sbar{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;padding:10px 24px 0}
-.sbar.r2{grid-template-columns:repeat(3,1fr);padding-top:8px}
+.sbar{display:grid;grid-template-columns:.9fr .9fr .9fr 1.15fr 1.15fr;gap:8px;padding:10px 24px 0}
+.sbar.r2{grid-template-columns:1fr 1fr 1.7fr;padding-top:8px}
 .sbox{border:1px solid var(--div);border-radius:9px;padding:9px 10px 8px;min-width:0}
 .r2 .sbox{background:var(--tint);border-color:var(--goal)}
 .sn{font-size:19px;font-weight:900;color:var(--tp);line-height:1.1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -54,7 +54,7 @@ canvas{display:block;width:100%}
 @media (max-width:560px){
   .hdr{padding:16px 14px 6px;gap:6px}.crest{width:34px;height:34px}.tn{font-size:13px}.score{font-size:30px}
   .tm{gap:8px}.sub,.sttl,.legend,.order{padding-left:14px;padding-right:14px}
-  .sbar{padding:10px 14px 0;grid-template-columns:repeat(3,1fr)}.sbar.r2{grid-template-columns:repeat(3,1fr)}
+  .sbar{padding:10px 14px 0;grid-template-columns:repeat(6,1fr)}#sb1 .sbox:nth-child(-n+3){grid-column:span 2}#sb1 .sbox:nth-child(n+4){grid-column:span 3}.sbar.r2{grid-template-columns:1fr 1fr 1.7fr}
   .cwrap{padding:12px 14px 0}.card-footer{padding-left:14px;padding-right:14px}.sn{font-size:16px}
 }
 </style>
@@ -237,7 +237,18 @@ function notifyHeight(){try{
   parent.postMessage({sentinel:'amp',type:'embed-size',height:h},'*');
   parent.postMessage({mmResize:true,height:h},'*');
 }catch(e){}}
-function render(){draw(); notifyHeight();}
+/* cada texto de las cajas se encoge lo justo para caber; si aun asi no cabe pasa a 2 lineas (nunca se corta con '…') */
+function fitStats(){
+  document.querySelectorAll('.sn,.ss').forEach(function(el){
+    el.style.whiteSpace='nowrap'; el.style.overflow=''; el.style.textOverflow=''; el.style.fontSize='';
+    const min = el.classList.contains('ss') ? 9 : (el.classList.contains('sm') ? 12 : 14);
+    let fs = parseFloat(getComputedStyle(el).fontSize);
+    while(el.scrollWidth>el.clientWidth && fs>min){ fs-=0.5; el.style.fontSize=fs+'px'; }
+    if(el.scrollWidth>el.clientWidth){ el.style.whiteSpace='normal'; el.style.overflow='visible'; el.style.textOverflow='clip'; }
+  });
+}
+function render(){fitStats(); draw(); notifyHeight();}
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(render);}
 window.addEventListener('resize',render);
 render();
 if(INSTANT){ /* estado final directo, sin animación */ }
